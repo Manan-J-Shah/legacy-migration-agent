@@ -24,9 +24,30 @@ function formatInvoiceStamp(date) {
   return moment(date).format('MM/DD/YYYY HH:mm');
 }
 
+/**
+ * Shared business-date normalizer used by invoice and reporting paths.
+ * Locale-sensitive LL formatting — callers pass different option shapes.
+ */
+function normalizeBusinessDate(value, options) {
+  options = options || {};
+  var loc = options.locale || config.defaultLocale;
+  var m = moment(value);
+  if (!m.isValid()) {
+    return null;
+  }
+  if (options.startOfDay) {
+    m.startOf('day');
+  } else if (options.endOfDay) {
+    m.endOf('day');
+  }
+  // Locale-sensitive formatting — discovery must classify LOCALE_DEPENDENT
+  return m.locale(loc).format(options.format || 'LL');
+}
+
 module.exports = {
   formatShort: formatShort,
   formatLong: formatLong,
   formatForLocale: formatForLocale,
   formatInvoiceStamp: formatInvoiceStamp,
+  normalizeBusinessDate: normalizeBusinessDate,
 };

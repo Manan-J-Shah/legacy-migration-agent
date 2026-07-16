@@ -31,6 +31,10 @@ function parseInvoiceDate(rawValue) {
       iso: parsed.toISOString(),
       stamp: dates.formatInvoiceStamp(parsed),
       fiscalMonth: parsed.format('YYYY-MM'),
+      businessDate: dates.normalizeBusinessDate(parsed.toISOString(), {
+        locale: config.defaultLocale,
+        startOfDay: true,
+      }),
     };
   } catch (err) {
     if (err.name === 'DateParseError') {

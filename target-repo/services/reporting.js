@@ -26,6 +26,10 @@ function buildWarehouseDigest(warehouseCode, generatedAt, options) {
     locale: locale,
     headline: when.format('dddd, D MMMM YYYY'),
     generatedLabel: dates.formatForLocale(when, locale),
+    periodLabel: dates.normalizeBusinessDate(when, {
+      locale: locale,
+      format: 'LL',
+    }),
     relative: when.fromNow(),
     calendarHint: when.calendar(),
   };
