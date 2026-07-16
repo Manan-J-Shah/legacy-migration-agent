@@ -32,3 +32,13 @@ issues_log
 - Problem: TARGET_ROOT pointed at Desktop/control-repo instead of the workspace
 - Root cause: pipeline/repoConfig.js used path.join(__dirname, '..', '..') from pipeline/
 - Solution: use path.join(__dirname, '..') as ROOT
+
+[2026-07-16] awkward-site discovery misclassified locale / alias usages
+- Problem: normalizeBusinessDate and shiftSharedWindow did not land in LOCALE_DEPENDENT / MUTATION_CHAIN
+- Root cause: binding-only moment() emits were SIMPLE_FORMAT; .locale() on bindings and Identifier aliases were not tracked; chained .format after .locale double-emitted SIMPLE_FORMAT
+- Solution: skip binding-only constructions; track moment aliases; classify tracked methods on bindings with outward chains; emit only innermost non-mutation calls
+
+[2026-07-16] migrate orchestrator exceeded 250-line file limit
+- Problem: pipeline/migrate/index.js grew past the project max when wiring the per-cluster loop
+- Root cause: orchestrator + cluster loop lived in one module
+- Solution: split cluster processing into pipeline/migrate/clusterLoop.js; keep index.js as wiring only

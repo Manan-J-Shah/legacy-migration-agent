@@ -1,0 +1,107 @@
+{
+  "stage": "migrate",
+  "timestamp": "2026-07-16T22:29:53.190Z",
+  "baseBranch": "pr1-pipeline-hardening",
+  "clusters": [
+    {
+      "clusterId": "SIMPLE_FORMAT",
+      "status": "failed",
+      "coverage": "direct",
+      "tests": "failed",
+      "files": [
+        {
+          "path": "target-repo/lib/dates.js",
+          "before": "var moment = require('moment');\nvar format = require('date-fns').format;\nvar config = require('../config');\n\n/**\n * Shared display helpers. Prefer these over raw moment() in job output so\n * Ops sees consistent stamps in the nightly email digests.\n */\nfunction formatShort(date) {\n  return format(date, 'yyyy-MM-dd');\n}\n\nfunction formatLong(date) {\n  return moment(date).format('MMMM Do YYYY, h:mm:ss\n/* … */",
+          "after": "var moment = require('moment');\nvar format = require('date-fns').format;\nvar config = require('../config');\n\n/**\n * Shared display helpers. Prefer these over raw moment() in job output so\n * Ops sees consistent stamps in the nightly email digests.\n */\nfunction formatShort(date) {\n  return format(date, 'yyyy-MM-dd');\n}\n\nfunction formatLong(date) {\n  return moment(date).format('MMMM Do YYYY, h:mm:ss\n/* … */",
+          "changes": 1
+        },
+        {
+          "path": "target-repo/services/invoices.js",
+          "before": "var moment = require('moment');\nvar config = require('../config');\nvar dates = require('../lib/dates');\nvar DateParseError = require('../lib/errors').DateParseError;\n\n/**\n * ERP invoice date field is notoriously dirty. Parse carefully — finance\n * rejects the whole batch if one row throws uncaught.\n */\nfunction parseInvoiceDate(rawValue) {\n  try {\n    if (rawValue === null || rawValue === undefine\n/* … */",
+          "after": "var moment = require('moment');\nvar config = require('../config');\nvar dates = require('../lib/dates');\nvar DateParseError = require('../lib/errors').DateParseError;\n\n/**\n * ERP invoice date field is notoriously dirty. Parse carefully — finance\n * rejects the whole batch if one row throws uncaught.\n */\nfunction parseInvoiceDate(rawValue) {\n  try {\n    if (rawValue === null || rawValue === undefine\n/* … */",
+          "changes": 0
+        },
+        {
+          "path": "target-repo/services/reporting.js",
+          "before": "var moment = require('moment');\nrequire('moment/locale/de');\nrequire('moment/locale/fr');\nvar config = require('../config');\nvar dates = require('../lib/dates');\n\n// Requiring locale packs flips the global default to the last one loaded —\n// put it back or every other job starts printing French.\nmoment.locale(config.defaultLocale);\n\n/**\n * Weekly ops digest. EU warehouses get German copy; FR overr\n/* … */",
+          "after": "var moment = require('moment');\nrequire('moment/locale/de');\nrequire('moment/locale/fr');\nvar config = require('../config');\nvar dates = require('../lib/dates');\n\n// Requiring locale packs flips the global default to the last one loaded —\n// put it back or every other job starts printing French.\nmoment.locale(config.defaultLocale);\n\n/**\n * Weekly ops digest. EU warehouses get German copy; FR overr\n/* … */",
+          "changes": 0
+        },
+        {
+          "path": "target-repo/services/scheduler.js",
+          "before": "var moment = require('moment');\nvar config = require('../config');\nvar dates = require('../lib/dates');\n\n/**\n * Builds pick / ship / return windows for an order.\n * NOTE: moment objects are mutated in place — do not reuse the same instance\n * across steps (we hit that bug in prod Q3 2021).\n */\nfunction buildFulfillmentWindow(orderCreatedAt) {\n  var created = moment(orderCreatedAt);\n  if (!created.\n/* … */",
+          "after": "var moment = require('moment');\nvar config = require('../config');\nvar dates = require('../lib/dates');\n\n/**\n * Builds pick / ship / return windows for an order.\n * NOTE: moment objects are mutated in place — do not reuse the same instance\n * across steps (we hit that bug in prod Q3 2021).\n */\nfunction buildFulfillmentWindow(orderCreatedAt) {\n  var created = moment(orderCreatedAt);\n  if (!created.\n/* … */",
+          "changes": 0
+        },
+        {
+          "path": "target-repo/services/shipments.js",
+          "before": "var moment = require('moment-timezone');\nvar config = require('../config');\nvar dates = require('../lib/dates');\n\n/**\n * Converts a UTC event time into each warehouse's wall clock.\n * Cutover times for carriers are always local to the origin DC.\n */\nfunction toWarehouseLocal(utcTime, warehouseCode) {\n  var tz = config.warehouses[warehouseCode];\n  if (!tz) {\n    throw new Error('Unknown warehouse c\n/* … */",
+          "after": "var moment = require('moment-timezone');\nvar config = require('../config');\nvar dates = require('../lib/dates');\n\n/**\n * Converts a UTC event time into each warehouse's wall clock.\n * Cutover times for carriers are always local to the origin DC.\n */\nfunction toWarehouseLocal(utcTime, warehouseCode) {\n  var tz = config.warehouses[warehouseCode];\n  if (!tz) {\n    throw new Error('Unknown warehouse c\n/* … */",
+          "changes": 0
+        },
+        {
+          "path": "target-repo/services/vendorExports.js",
+          "before": "var moment = require('moment');\n\n/**\n * Quarterly vendor CSV helper — rarely touched; not wired into nightly jobs.\n * Fiscal periods are stored as UTC wall times from the vendor portal.\n */\nfunction formatVendorFiscalPeriod(raw, timezone) {\n  var tz = timezone || 'UTC';\n  // Force TIMEZONE classification via utc + offset-style conversion\n  var start = moment.utc(raw);\n  if (!start.isValid()) {\n   \n/* … */",
+          "after": "var moment = require('moment');\n\n/**\n * Quarterly vendor CSV helper — rarely touched; not wired into nightly jobs.\n * Fiscal periods are stored as UTC wall times from the vendor portal.\n */\nfunction formatVendorFiscalPeriod(raw, timezone) {\n  var tz = timezone || 'UTC';\n  // Force TIMEZONE classification via utc + offset-style conversion\n  var start = moment.utc(raw);\n  if (!start.isValid()) {\n   \n/* … */",
+          "changes": 0
+        }
+      ],
+      "logEntryIds": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "clusterId": "MUTATION_CHAIN",
+      "status": "pending_external",
+      "coverage": "none",
+      "tests": "skipped_unguarded",
+      "files": [],
+      "logEntryIds": [
+        4,
+        5
+      ]
+    },
+    {
+      "clusterId": "LOCALE_DEPENDENT",
+      "status": "pending_external",
+      "coverage": "none",
+      "tests": "skipped_unguarded",
+      "files": [],
+      "logEntryIds": [
+        6,
+        7
+      ]
+    },
+    {
+      "clusterId": "TIMEZONE",
+      "status": "pending_external",
+      "coverage": "none",
+      "tests": "skipped_unguarded",
+      "files": [],
+      "logEntryIds": [
+        8,
+        9
+      ]
+    },
+    {
+      "clusterId": "WRAPPED_ERROR_HANDLING",
+      "status": "pending_external",
+      "coverage": "none",
+      "tests": "skipped_unguarded",
+      "files": [],
+      "logEntryIds": [
+        10,
+        11
+      ]
+    }
+  ],
+  "summary": {
+    "migrated": 0,
+    "failed": 1,
+    "pendingExternal": 4,
+    "skippedUnguarded": 0
+  }
+}
