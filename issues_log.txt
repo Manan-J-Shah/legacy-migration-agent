@@ -32,3 +32,8 @@ issues_log
 - Problem: TARGET_ROOT pointed at Desktop/control-repo instead of the workspace
 - Root cause: pipeline/repoConfig.js used path.join(__dirname, '..', '..') from pipeline/
 - Solution: use path.join(__dirname, '..') as ROOT
+
+[2026-07-16] npm install --prefix control-repo injected parent package
+- Problem: control-repo/package.json gained "moment-migration-pipeline": "file:.."
+- Root cause: npm install --prefix from the parent workspace linked the parent package
+- Solution: run npm install from inside control-repo after writing a clean package.json
