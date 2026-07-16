@@ -67,26 +67,36 @@ Spread across the tree so they read as organic legacy code. **No dedicated tests
 - Uses Moment parse + optional start/end-of-day + locale-sensitive formatting.
 - Called from both invoice and reporting paths.
 - Discovery sees one utility; usage context is ambiguous across callers.
-- Indirect coverage only via existing caller characterization tests.
+- Indirect coverage only via existing caller characterization tests (see §4.3a — not `skipped_unguarded`).
 
 ### 3.2 No behavioral evidence — `services/vendorExports.js` (new)
 
 - Rarely touched quarterly vendor export helper.
 - Moment-based fiscal period / vendor date string conversion.
 - Exported but not wired into sample jobs or fixtures.
-- Discovery finds it; characterize does not invent inputs; migrate treats it as unguarded.
+- Discovery finds it; characterize does not invent inputs; migrate treats it as unguarded (`skipped_unguarded` per §4.3a — no direct or indirect match).
 
 ### 3.3 Non-obvious mutation aliasing — `services/scheduler.js`
 
 - Shared Moment instance mutated in place, then read through another reference downstream.
 - Naïve immutable date-fns substitution that drops the returned value silently changes later fields.
-- Intentionally untested.
+- Intentionally untested (no direct characterization test for the aliasing path; coverage resolution per §4.3a).
 
 ### After adding sites
 
 1. `npm run discovery` → refresh `pipeline/data/manifest.json`.
 2. `npm run planner` → refresh `pipeline/data/plan.json`.
 3. Do **not** rerun characterize for the new sites.
+
+### 3.4 Classification mapping (required — discovery depends on this)
+
+| Site | File | Classifier bucket |
+|------|------|-------------------|
+| Ambiguous shared utility | lib/dates.js | LOCALE_DEPENDENT |
+| No behavioral evidence | services/vendorExports.js | TIMEZONE |
+| Non-obvious mutation aliasing | services/scheduler.js | MUTATION_CHAIN |
+
+No new categories needed. If discovery's AST walk can't cleanly tag `normalizeBusinessDate` as LOCALE_DEPENDENT (it does parse + optional locale-sensitive formatting), that's a discovery bug to fix before Step 2 is "done," not a dashboard problem to paper over later.
 
 ## 4. Migrate guardrails (Step 3)
 
@@ -96,18 +106,34 @@ Spread across the tree so they read as organic legacy code. **No dedicated tests
 2. Apply work:
    - **`SIMPLE_FORMAT`:** in-repo mechanical transform (codemod / AST rewrite for `.format` and plain parse+format patterns).
    - **Other clusters:** write Codex handoff prompt under `pipeline/data/handoffs/<cluster-id>.md` (or equivalent); status `pending_external` unless a patch is already present.
-3. Run that cluster’s characterization Jest tests with `TZ=UTC` (intersect plan usages with existing characterize tests by function/file).
-   - If the cluster has **no** matching characterization tests (e.g. vendor export only), do **not** invent coverage: record `tests: skipped_unguarded` and **do not merge** an auto-transform that touched unguarded files. Handoff/external clusters may remain `pending_external` without a merge.
+3. Run that cluster’s characterization Jest tests with `TZ=UTC` (intersect plan usages with existing characterize tests by function/file). Apply the coverage resolution rule in §4.3a.
 4. **Pass:** (tests ran and passed) `git commit -m "migrated: <cluster-id>"`, merge into base, append log success.
 5. **Fail:** do not merge; print  
    `git checkout <base> && git branch -D migrate/<cluster-id>`  
    leave base untouched; append log failure with test summary.
 6. Append every action to `pipeline/data/migration-log.json`.
 
+### 4.3a Coverage resolution rule
+
+When checking test coverage for a cluster, resolve in this order:
+
+1. Direct match — a characterization test exists for this exact function/file.
+2. Indirect match — the call site is reached by an existing caller's characterization test (walk the caller graph one level up from manifest.json's captured function). Mark `tests: indirect_coverage` — proceed with transform/handoff, but flag `coverage: indirect` in migrate.json so triage treats a test pass here as weaker evidence than a direct match.
+3. No match — mark `skipped_unguarded`, no merge, per existing rule.
+
+This keeps 3.1 genuinely "ambiguous" (has some coverage, just not direct) rather than collapsing into the same bucket as 3.2 ("no evidence at all").
+
 ### Force-fail insurance
 
 - `MIGRATE_FORCE_FAIL=<cluster-id>` forces the test gate to fail after the transform (or instead of transform) so rollback is filmable even if the live awkward-site path is flaky.
 - Demo path also supports a real failure by pointing Codex at an awkward site without docs.
+
+### 4.4 Handoff patch application
+
+1. `migrate` writes `pipeline/data/handoffs/<cluster-id>.md` (the Codex prompt) if no patch exists yet.
+2. Run Codex externally against that prompt; save its output as `pipeline/data/handoffs/<cluster-id>.patch`.
+3. On next `migrate` run, if `<cluster-id>.patch` exists: check out `migrate/<cluster-id>`, `git apply` the patch, run the test gate (step 3 of the per-cluster loop), then follow the normal pass/fail commit-or-rollback path.
+4. If no patch file is present, status stays `pending_external` — migrate does not block on it and moves to the next cluster.
 
 ### `migration-log.json` shape
 
@@ -134,7 +160,7 @@ Spread across the tree so they read as organic legacy code. **No dedicated tests
 
 ### `migrate.json` (stage output)
 
-Records per-cluster applied status, file diffs metadata (`before`/`after` snippets for dashboard), and links to log entry ids.
+Records per-cluster applied status, file diffs metadata (`before`/`after` snippets for dashboard), links to log entry ids, and coverage strength (`coverage: "direct" | "indirect" | "none"`) from §4.3a.
 
 ## 5. Triage artifact rename
 
@@ -157,6 +183,10 @@ Records per-cluster applied status, file diffs metadata (`before`/`after` snippe
 
 ## 7. Demo script (Step 5)
 
+### 7.0 Pre-demo prep (not filmed, done ahead of time)
+
+Before recording: run the handoff loop (§4.4) for at least one non-SIMPLE_FORMAT cluster — recommend TIMEZONE (`services/vendorExports.js`) — so the live/recorded run has one real Codex-driven merge to show alongside the flagged BUG/NEEDS_REVIEW case, not only mechanical transforms and pending states.
+
 `DEMO_SCRIPT.md` — six numbered beats:
 
 1. Show target-repo, 0% migrated coverage narrative.
@@ -174,8 +204,8 @@ Stacked on `master` (or configurable base):
 
 | PR | Title | Scope |
 |----|--------|--------|
-| 1 | Pipeline hardening: awkward sites + migrate guardrails | Step 2 sites, discovery+planner refresh, migrate orchestrator, SIMPLE_FORMAT transform, migration-log, force-fail, migrate.json |
-| 2 | Demo surface: report dashboard + script | Consolidate dashboard → `report/dashboard.html`, triage-results, DEMO_SCRIPT.md |
+| 1 | Pipeline hardening: awkward sites + migrate guardrails | Step 2 sites + §3.4 classifier mapping, discovery+planner refresh, migrate orchestrator, SIMPLE_FORMAT transform, migration-log, force-fail, §4.3a coverage resolution, §4.4 handoff `.md`/`.patch` loop, migrate.json |
+| 2 | Demo surface: report dashboard + script | Consolidate dashboard → `report/dashboard.html`, triage-results, DEMO_SCRIPT.md (+ §7.0 prep note) |
 
 ```mermaid
 flowchart TB
