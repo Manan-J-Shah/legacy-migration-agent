@@ -51,7 +51,22 @@ function bumpRetryWindow(failedAt, attempt) {
   };
 }
 
+/**
+ * Shared Moment instance mutated through an alias — naïve immutable
+ * rewrites that drop the return value silently break later field reads.
+ */
+function shiftSharedWindow(anchor, hours) {
+  var shared = moment(anchor);
+  var alias = shared; // intentional alias — naïve immutable rewrite breaks this
+  alias.add(hours, 'hours');
+  return {
+    shiftedIso: shared.toISOString(),
+    display: dates.formatLong(shared),
+  };
+}
+
 module.exports = {
   buildFulfillmentWindow: buildFulfillmentWindow,
   bumpRetryWindow: bumpRetryWindow,
+  shiftSharedWindow: shiftSharedWindow,
 };
