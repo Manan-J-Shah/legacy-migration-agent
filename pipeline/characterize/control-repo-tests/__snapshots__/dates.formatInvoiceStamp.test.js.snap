@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`formatInvoiceStamp [SIMPLE_FORMAT] case 0 -> ["2026-07-14T18:30:00Z"] 1`] = `
+{
+  "ok": "07/14/2026 18:30",
+}
+`;
+
+exports[`formatInvoiceStamp [SIMPLE_FORMAT] case 1 -> ["2026-01-01T00:00:00Z"] 1`] = `
+{
+  "ok": "01/01/2026 00:00",
+}
+`;
+
+exports[`formatInvoiceStamp [SIMPLE_FORMAT] case 2 -> ["2026-11-06T23:45:00Z"] 1`] = `
+{
+  "ok": "11/06/2026 23:45",
+}
+`;

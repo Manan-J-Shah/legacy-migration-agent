@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`agingBucket [SIMPLE_FORMAT] case 0 -> ["07/01/2026","2026-07-16"] 1`] = `
+{
+  "ok": {
+    "ageDays": 15,
+    "bucket": "current",
+    "invoice": {
+      "fiscalMonth": "2026-07",
+      "iso": "2026-07-01T00:00:00.000Z",
+      "raw": "07/01/2026",
+      "stamp": "07/01/2026 00:00",
+    },
+  },
+}
+`;
+
+exports[`agingBucket [SIMPLE_FORMAT] case 1 -> ["2026-04-01","2026-07-16"] 1`] = `
+{
+  "ok": {
+    "ageDays": 106,
+    "bucket": "90+",
+    "invoice": {
+      "fiscalMonth": "2026-04",
+      "iso": "2026-04-01T00:00:00.000Z",
+      "raw": "2026-04-01",
+      "stamp": "04/01/2026 00:00",
+    },
+  },
+}
+`;
+
+exports[`agingBucket [SIMPLE_FORMAT] case 2 -> ["15.05.2026","2026-07-16"] 1`] = `
+{
+  "ok": {
+    "ageDays": 62,
+    "bucket": "60-90",
+    "invoice": {
+      "fiscalMonth": "2026-05",
+      "iso": "2026-05-15T00:00:00.000Z",
+      "raw": "15.05.2026",
+      "stamp": "05/15/2026 00:00",
+    },
+  },
+}
+`;

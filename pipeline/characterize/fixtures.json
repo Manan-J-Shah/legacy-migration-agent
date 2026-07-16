@@ -1,0 +1,67 @@
+{
+  "_comment": "Representative call inputs for characterization snapshots. Keyed by '<manifest file path>::<exported function>'. Single source of truth for test inputs; the generator is generic and reads only from here.",
+  "clock": "2026-07-16T16:00:00.000Z",
+  "timezone": "UTC",
+  "cases": {
+    "target-repo/lib/dates.js::formatShort": [
+      ["2026-07-14T18:30:00Z"],
+      ["2026-01-01T00:00:00Z"],
+      ["2026-12-31T23:59:59Z"]
+    ],
+    "target-repo/lib/dates.js::formatLong": [
+      ["2026-07-14T18:30:00Z"],
+      ["2026-02-28T12:00:00Z"],
+      ["2026-12-31T23:59:59Z"]
+    ],
+    "target-repo/lib/dates.js::formatForLocale": [
+      ["2026-07-14T18:30:00Z", "en"],
+      ["2026-07-14T18:30:00Z", "de"],
+      ["2026-07-14T18:30:00Z", "fr"]
+    ],
+    "target-repo/lib/dates.js::formatInvoiceStamp": [
+      ["2026-07-14T18:30:00Z"],
+      ["2026-01-01T00:00:00Z"],
+      ["2026-11-06T23:45:00Z"]
+    ],
+    "target-repo/services/invoices.js::parseInvoiceDate": [
+      ["07/01/2026"],
+      ["2026-06-15"],
+      ["not-a-date"]
+    ],
+    "target-repo/services/invoices.js::agingBucket": [
+      ["07/01/2026", "2026-07-16"],
+      ["2026-04-01", "2026-07-16"],
+      ["15.05.2026", "2026-07-16"]
+    ],
+    "target-repo/services/reporting.js::buildWarehouseDigest": [
+      ["ORD", "2026-07-16T20:05:00Z"],
+      ["EWR", "2026-07-16T20:05:00Z", { "locale": "fr" }],
+      ["LAX", "2026-01-15T09:00:00Z", { "locale": "de" }]
+    ],
+    "target-repo/services/reporting.js::formatCustomerFacingEta": [
+      ["2026-07-14T18:30:00Z", "en"],
+      ["2026-07-14T18:30:00Z", "de"],
+      ["2026-07-14T18:30:00Z", "fr"]
+    ],
+    "target-repo/services/scheduler.js::buildFulfillmentWindow": [
+      ["2026-07-14T18:30:00Z"],
+      ["2026-02-27T12:00:00Z"],
+      ["2026-11-06T23:00:00Z"]
+    ],
+    "target-repo/services/scheduler.js::bumpRetryWindow": [
+      ["2026-07-16T09:12:00Z", 2],
+      ["2026-07-16T09:12:00Z", 5],
+      ["2026-07-16T09:12:00Z", 1]
+    ],
+    "target-repo/services/shipments.js::toWarehouseLocal": [
+      ["2026-07-16T20:05:00Z", "LAX"],
+      ["2026-07-16T20:05:00Z", "EWR"],
+      ["2026-07-16T20:05:00Z", "ORD"]
+    ],
+    "target-repo/services/shipments.js::cutoffForCarrier": [
+      ["ORD", "2026-07-16"],
+      ["LAX", "2026-01-15"],
+      ["EWR", "2026-07-16"]
+    ]
+  }
+}

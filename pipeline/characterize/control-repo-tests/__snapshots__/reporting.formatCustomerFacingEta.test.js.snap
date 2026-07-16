@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`formatCustomerFacingEta [LOCALE_DEPENDENT] case 0 -> ["2026-07-14T18:30:00Z","en"] 1`] = `
+{
+  "ok": "Tuesday, July 14, 2026 6:30 PM",
+}
+`;
+
+exports[`formatCustomerFacingEta [LOCALE_DEPENDENT] case 1 -> ["2026-07-14T18:30:00Z","de"] 1`] = `
+{
+  "ok": "Dienstag, 14. Juli 2026 18:30",
+}
+`;
+
+exports[`formatCustomerFacingEta [LOCALE_DEPENDENT] case 2 -> ["2026-07-14T18:30:00Z","fr"] 1`] = `
+{
+  "ok": "mardi 14 juillet 2026 18:30",
+}
+`;

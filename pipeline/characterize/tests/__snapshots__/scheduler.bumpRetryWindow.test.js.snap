@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`bumpRetryWindow [MUTATION_CHAIN] case 0 -> ["2026-07-16T09:12:00Z",2] 1`] = `
+{
+  "ok": {
+    "retryAt": "July 16th 2026, 11:27:00 am",
+    "retryAtIso": "2026-07-16T11:27:00.000Z",
+  },
+}
+`;
+
+exports[`bumpRetryWindow [MUTATION_CHAIN] case 1 -> ["2026-07-16T09:12:00Z",5] 1`] = `
+{
+  "ok": {
+    "retryAt": "July 16th 2026, 1:57:00 pm",
+    "retryAtIso": "2026-07-16T13:57:00.000Z",
+  },
+}
+`;
+
+exports[`bumpRetryWindow [MUTATION_CHAIN] case 2 -> ["2026-07-16T09:12:00Z",1] 1`] = `
+{
+  "ok": {
+    "retryAt": "July 16th 2026, 10:27:00 am",
+    "retryAtIso": "2026-07-16T10:27:00.000Z",
+  },
+}
+`;

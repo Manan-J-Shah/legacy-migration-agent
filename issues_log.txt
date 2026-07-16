@@ -1,0 +1,34 @@
+issues_log
+==========
+
+[2026-07-16] target-repo locale pollution after requiring moment locale packs
+- Problem: schedule job printed French month names (juillet) despite defaultLocale en
+- Root cause: require('moment/locale/fr') switches moment's global locale to the last loaded pack
+- Solution: reset moment.locale(config.defaultLocale) immediately after locale requires in services/reporting.js
+
+[2026-07-16] discovery AST walk stack overflow
+- Problem: Maximum call stack size exceeded when scanning target-repo
+- Root cause: attachParents set node._parent, and walk() recursed into _parent creating a cycle
+- Solution: skip _parent (and comments/tokens) keys in astUtil.walk
+
+[2026-07-16] characterize could not resolve jest CLI binary
+- Problem: require.resolve('jest/bin/jest.js') threw ERR_PACKAGE_PATH_NOT_EXPORTED
+- Root cause: jest package.json "exports" map does not expose ./bin/jest.js
+- Solution: locate CLI via path.dirname(require.resolve('jest/package.json')) + bin/jest.js in runJest.js
+- Note: characterize snapshots depend on current time and TZ, so tests freeze the clock
+  (jest.useFakeTimers) and the runner pins TZ=UTC for reproducible baselines.
+
+[2026-07-16] root test command ignored characterization timezone
+- Problem: npm test produced 27 snapshot mismatches while the locked baseline was unchanged
+- Root cause: the root script invoked Jest directly, bypassing runJest.js and its TZ=UTC pin
+- Solution: route npm test through pipeline/characterize/ci.js, which uses the deterministic runner
+
+[2026-07-16] dashboard trailing-slash route returned HTTP 500
+- Problem: /pipeline/dashboard/ resolved to a directory and fs.readFile failed
+- Root cause: the local server mapped only the root URL to index.html
+- Solution: explicitly map /pipeline/dashboard/ to pipeline/dashboard/index.html
+
+[2026-07-16] control-repo discovery resolved wrong project root
+- Problem: TARGET_ROOT pointed at Desktop/control-repo instead of the workspace
+- Root cause: pipeline/repoConfig.js used path.join(__dirname, '..', '..') from pipeline/
+- Solution: use path.join(__dirname, '..') as ROOT

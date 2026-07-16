@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Moment Migration Control Room</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Migration control room</p>
+        <h1>Moment.js → date-fns</h1>
+        <p class="lede">Behavior-locked progress across discovery, characterization, and migration.</p>
+      </div>
+      <div class="health" id="pipeline-health">
+        <span class="pulse"></span><span>Loading pipeline data…</span>
+      </div>
+    </header>
+
+    <section class="metrics" id="metrics" aria-label="Pipeline summary"></section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Confidence by cluster</p>
+          <h2>Before / after coverage</h2>
+        </div>
+        <p class="hint">Locked characterization cases mapped to each risk cluster</p>
+      </div>
+      <div class="cluster-grid" id="clusters"></div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Applied changes</p>
+          <h2>Call-site diffs</h2>
+        </div>
+        <div class="filter-row" id="filters"></div>
+      </div>
+      <div class="diff-list" id="diffs"></div>
+    </section>
+
+    <section class="flag-panel" id="flagged" aria-live="polite"></section>
+
+    <footer>
+      <span>Sources: manifest.json · characterize.json · plan.json · migrations.json</span>
+      <span id="generated-at"></span>
+    </footer>
+  </main>
+  <template id="empty-template">
+    <div class="empty">No records match this view.</div>
+  </template>
+  <script src="./dashboard.js" defer></script>
+</body>
+</html>

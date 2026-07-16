@@ -1,0 +1,25 @@
+{
+  "name": "moment-migration-pipeline",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pipeline to discover, characterize, plan, migrate, triage, and report moment.js usage",
+  "scripts": {
+    "discovery": "node pipeline/discovery/index.js",
+    "characterize": "node pipeline/characterize/index.js",
+    "discovery:control": "node -e \"process.env.TARGET_REPO='control-repo'; require('./pipeline/discovery').run()\"",
+    "characterize:control": "node -e \"process.env.TARGET_REPO='control-repo'; require('./pipeline/characterize').run()\"",
+    "planner": "node pipeline/planner/index.js",
+    "migrate": "node pipeline/migrate/index.js",
+    "triage": "node pipeline/triage/index.js",
+    "report": "node pipeline/report/index.js",
+    "dashboard": "node pipeline/dashboard/server.js",
+    "pipeline": "npm run discovery && npm run characterize && npm run planner && npm run migrate && npm run triage && npm run report",
+    "test": "node pipeline/characterize/ci.js"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.29.7"
+  }
+}

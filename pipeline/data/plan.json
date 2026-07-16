@@ -1,0 +1,267 @@
+[
+  {
+    "type": "SIMPLE_FORMAT",
+    "risk": "low",
+    "order": 1,
+    "usages": [
+      {
+        "file": "target-repo/lib/dates.js",
+        "line": 1,
+        "surroundingFunction": "<module>",
+        "classification": "SIMPLE_FORMAT"
+      },
+      {
+        "file": "target-repo/lib/dates.js",
+        "line": 9,
+        "surroundingFunction": "formatShort",
+        "classification": "SIMPLE_FORMAT"
+      },
+      {
+        "file": "target-repo/lib/dates.js",
+        "line": 13,
+        "surroundingFunction": "formatLong",
+        "classification": "SIMPLE_FORMAT"
+      },
+      {
+        "file": "target-repo/lib/dates.js",
+        "line": 23,
+        "surroundingFunction": "formatInvoiceStamp",
+        "classification": "SIMPLE_FORMAT"
+      },
+      {
+        "file": "target-repo/services/invoices.js",
+        "line": 1,
+        "surroundingFunction": "<module>",
+        "classification": "SIMPLE_FORMAT"
+      },
+      {
+        "file": "target-repo/services/invoices.js",
+        "line": 51,
+        "surroundingFunction": "agingBucket",
+        "classification": "SIMPLE_FORMAT"
+      },
+      {
+        "file": "target-repo/services/invoices.js",
+        "line": 51,
+        "surroundingFunction": "agingBucket",
+        "classification": "SIMPLE_FORMAT"
+      },
+      {
+        "file": "target-repo/services/reporting.js",
+        "line": 1,
+        "surroundingFunction": "<module>",
+        "classification": "SIMPLE_FORMAT"
+      },
+      {
+        "file": "target-repo/services/reporting.js",
+        "line": 18,
+        "surroundingFunction": "buildWarehouseDigest",
+        "classification": "SIMPLE_FORMAT"
+      },
+      {
+        "file": "target-repo/services/scheduler.js",
+        "line": 1,
+        "surroundingFunction": "<module>",
+        "classification": "SIMPLE_FORMAT"
+      },
+      {
+        "file": "target-repo/services/scheduler.js",
+        "line": 11,
+        "surroundingFunction": "buildFulfillmentWindow",
+        "classification": "SIMPLE_FORMAT"
+      },
+      {
+        "file": "target-repo/services/scheduler.js",
+        "line": 37,
+        "surroundingFunction": "buildFulfillmentWindow",
+        "classification": "SIMPLE_FORMAT"
+      }
+    ],
+    "summary": {
+      "usageCount": 12,
+      "fileCount": 4
+    }
+  },
+  {
+    "type": "MUTATION_CHAIN",
+    "risk": "medium",
+    "order": 2,
+    "usages": [
+      {
+        "file": "target-repo/services/scheduler.js",
+        "line": 17,
+        "surroundingFunction": "buildFulfillmentWindow",
+        "classification": "MUTATION_CHAIN"
+      },
+      {
+        "file": "target-repo/services/scheduler.js",
+        "line": 18,
+        "surroundingFunction": "buildFulfillmentWindow",
+        "classification": "MUTATION_CHAIN"
+      },
+      {
+        "file": "target-repo/services/scheduler.js",
+        "line": 18,
+        "surroundingFunction": "buildFulfillmentWindow",
+        "classification": "MUTATION_CHAIN"
+      },
+      {
+        "file": "target-repo/services/scheduler.js",
+        "line": 19,
+        "surroundingFunction": "buildFulfillmentWindow",
+        "classification": "MUTATION_CHAIN"
+      },
+      {
+        "file": "target-repo/services/scheduler.js",
+        "line": 19,
+        "surroundingFunction": "buildFulfillmentWindow",
+        "classification": "MUTATION_CHAIN"
+      },
+      {
+        "file": "target-repo/services/scheduler.js",
+        "line": 27,
+        "surroundingFunction": "buildFulfillmentWindow",
+        "classification": "MUTATION_CHAIN"
+      },
+      {
+        "file": "target-repo/services/scheduler.js",
+        "line": 29,
+        "surroundingFunction": "buildFulfillmentWindow",
+        "classification": "MUTATION_CHAIN"
+      },
+      {
+        "file": "target-repo/services/scheduler.js",
+        "line": 43,
+        "surroundingFunction": "bumpRetryWindow",
+        "classification": "MUTATION_CHAIN"
+      }
+    ],
+    "summary": {
+      "usageCount": 8,
+      "fileCount": 1
+    }
+  },
+  {
+    "type": "LOCALE_DEPENDENT",
+    "risk": "medium",
+    "order": 3,
+    "usages": [
+      {
+        "file": "target-repo/lib/dates.js",
+        "line": 18,
+        "surroundingFunction": "formatForLocale",
+        "classification": "LOCALE_DEPENDENT"
+      },
+      {
+        "file": "target-repo/services/reporting.js",
+        "line": 2,
+        "surroundingFunction": "<module>",
+        "classification": "LOCALE_DEPENDENT"
+      },
+      {
+        "file": "target-repo/services/reporting.js",
+        "line": 3,
+        "surroundingFunction": "<module>",
+        "classification": "LOCALE_DEPENDENT"
+      },
+      {
+        "file": "target-repo/services/reporting.js",
+        "line": 9,
+        "surroundingFunction": "<module>",
+        "classification": "LOCALE_DEPENDENT"
+      },
+      {
+        "file": "target-repo/services/reporting.js",
+        "line": 21,
+        "surroundingFunction": "buildWarehouseDigest",
+        "classification": "LOCALE_DEPENDENT"
+      },
+      {
+        "file": "target-repo/services/reporting.js",
+        "line": 22,
+        "surroundingFunction": "buildWarehouseDigest",
+        "classification": "LOCALE_DEPENDENT"
+      },
+      {
+        "file": "target-repo/services/reporting.js",
+        "line": 33,
+        "surroundingFunction": "buildWarehouseDigest",
+        "classification": "LOCALE_DEPENDENT"
+      },
+      {
+        "file": "target-repo/services/reporting.js",
+        "line": 39,
+        "surroundingFunction": "formatCustomerFacingEta",
+        "classification": "LOCALE_DEPENDENT"
+      }
+    ],
+    "summary": {
+      "usageCount": 8,
+      "fileCount": 2
+    }
+  },
+  {
+    "type": "TIMEZONE",
+    "risk": "high",
+    "order": 4,
+    "usages": [
+      {
+        "file": "target-repo/services/shipments.js",
+        "line": 1,
+        "surroundingFunction": "<module>",
+        "classification": "TIMEZONE"
+      },
+      {
+        "file": "target-repo/services/shipments.js",
+        "line": 15,
+        "surroundingFunction": "toWarehouseLocal",
+        "classification": "TIMEZONE"
+      },
+      {
+        "file": "target-repo/services/shipments.js",
+        "line": 19,
+        "surroundingFunction": "toWarehouseLocal",
+        "classification": "TIMEZONE"
+      },
+      {
+        "file": "target-repo/services/shipments.js",
+        "line": 29,
+        "surroundingFunction": "cutoffForCarrier",
+        "classification": "TIMEZONE"
+      },
+      {
+        "file": "target-repo/services/shipments.js",
+        "line": 30,
+        "surroundingFunction": "cutoffForCarrier",
+        "classification": "TIMEZONE"
+      }
+    ],
+    "summary": {
+      "usageCount": 5,
+      "fileCount": 1
+    }
+  },
+  {
+    "type": "WRAPPED_ERROR_HANDLING",
+    "risk": "high",
+    "order": 5,
+    "usages": [
+      {
+        "file": "target-repo/services/invoices.js",
+        "line": 16,
+        "surroundingFunction": "parseInvoiceDate",
+        "classification": "WRAPPED_ERROR_HANDLING"
+      },
+      {
+        "file": "target-repo/services/invoices.js",
+        "line": 19,
+        "surroundingFunction": "parseInvoiceDate",
+        "classification": "WRAPPED_ERROR_HANDLING"
+      }
+    ],
+    "summary": {
+      "usageCount": 2,
+      "fileCount": 1
+    }
+  }
+]

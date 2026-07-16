@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`parseInvoiceDate [WRAPPED_ERROR_HANDLING] case 0 -> ["07/01/2026"] 1`] = `
+{
+  "ok": {
+    "fiscalMonth": "2026-07",
+    "iso": "2026-07-01T00:00:00.000Z",
+    "raw": "07/01/2026",
+    "stamp": "07/01/2026 00:00",
+  },
+}
+`;
+
+exports[`parseInvoiceDate [WRAPPED_ERROR_HANDLING] case 1 -> ["2026-06-15"] 1`] = `
+{
+  "ok": {
+    "fiscalMonth": "2026-06",
+    "iso": "2026-06-15T00:00:00.000Z",
+    "raw": "2026-06-15",
+    "stamp": "06/15/2026 00:00",
+  },
+}
+`;
+
+exports[`parseInvoiceDate [WRAPPED_ERROR_HANDLING] case 2 -> ["not-a-date"] 1`] = `
+{
+  "error": {
+    "message": "Invoice date parse failed: Unrecognized invoice date format",
+    "name": "DateParseError",
+  },
+}
+`;

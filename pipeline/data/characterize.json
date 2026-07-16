@@ -1,0 +1,192 @@
+{
+  "stage": "characterize",
+  "timestamp": "2026-07-16T20:35:49.012Z",
+  "basedOn": "manifest",
+  "testsDir": "pipeline/characterize/tests",
+  "clock": "2026-07-16T16:00:00.000Z",
+  "timezone": "UTC",
+  "functions": [
+    {
+      "file": "target-repo/lib/dates.js",
+      "function": "formatShort",
+      "classifications": [
+        "SIMPLE_FORMAT"
+      ],
+      "coveredLines": [
+        9
+      ],
+      "testFile": "pipeline/characterize/tests/dates.formatShort.test.js",
+      "caseCount": 3
+    },
+    {
+      "file": "target-repo/lib/dates.js",
+      "function": "formatLong",
+      "classifications": [
+        "SIMPLE_FORMAT"
+      ],
+      "coveredLines": [
+        13
+      ],
+      "testFile": "pipeline/characterize/tests/dates.formatLong.test.js",
+      "caseCount": 3
+    },
+    {
+      "file": "target-repo/lib/dates.js",
+      "function": "formatForLocale",
+      "classifications": [
+        "LOCALE_DEPENDENT"
+      ],
+      "coveredLines": [
+        18
+      ],
+      "testFile": "pipeline/characterize/tests/dates.formatForLocale.test.js",
+      "caseCount": 3
+    },
+    {
+      "file": "target-repo/lib/dates.js",
+      "function": "formatInvoiceStamp",
+      "classifications": [
+        "SIMPLE_FORMAT"
+      ],
+      "coveredLines": [
+        23
+      ],
+      "testFile": "pipeline/characterize/tests/dates.formatInvoiceStamp.test.js",
+      "caseCount": 3
+    },
+    {
+      "file": "target-repo/services/invoices.js",
+      "function": "parseInvoiceDate",
+      "classifications": [
+        "WRAPPED_ERROR_HANDLING"
+      ],
+      "coveredLines": [
+        16,
+        19
+      ],
+      "testFile": "pipeline/characterize/tests/invoices.parseInvoiceDate.test.js",
+      "caseCount": 3
+    },
+    {
+      "file": "target-repo/services/invoices.js",
+      "function": "agingBucket",
+      "classifications": [
+        "SIMPLE_FORMAT"
+      ],
+      "coveredLines": [
+        51
+      ],
+      "testFile": "pipeline/characterize/tests/invoices.agingBucket.test.js",
+      "caseCount": 3
+    },
+    {
+      "file": "target-repo/services/reporting.js",
+      "function": "buildWarehouseDigest",
+      "classifications": [
+        "LOCALE_DEPENDENT",
+        "SIMPLE_FORMAT"
+      ],
+      "coveredLines": [
+        18,
+        21,
+        22,
+        33
+      ],
+      "testFile": "pipeline/characterize/tests/reporting.buildWarehouseDigest.test.js",
+      "caseCount": 3
+    },
+    {
+      "file": "target-repo/services/reporting.js",
+      "function": "formatCustomerFacingEta",
+      "classifications": [
+        "LOCALE_DEPENDENT"
+      ],
+      "coveredLines": [
+        39
+      ],
+      "testFile": "pipeline/characterize/tests/reporting.formatCustomerFacingEta.test.js",
+      "caseCount": 3
+    },
+    {
+      "file": "target-repo/services/scheduler.js",
+      "function": "buildFulfillmentWindow",
+      "classifications": [
+        "MUTATION_CHAIN",
+        "SIMPLE_FORMAT"
+      ],
+      "coveredLines": [
+        11,
+        17,
+        18,
+        19,
+        27,
+        29,
+        37
+      ],
+      "testFile": "pipeline/characterize/tests/scheduler.buildFulfillmentWindow.test.js",
+      "caseCount": 3
+    },
+    {
+      "file": "target-repo/services/scheduler.js",
+      "function": "bumpRetryWindow",
+      "classifications": [
+        "MUTATION_CHAIN"
+      ],
+      "coveredLines": [
+        43
+      ],
+      "testFile": "pipeline/characterize/tests/scheduler.bumpRetryWindow.test.js",
+      "caseCount": 3
+    },
+    {
+      "file": "target-repo/services/shipments.js",
+      "function": "toWarehouseLocal",
+      "classifications": [
+        "TIMEZONE"
+      ],
+      "coveredLines": [
+        15,
+        19
+      ],
+      "testFile": "pipeline/characterize/tests/shipments.toWarehouseLocal.test.js",
+      "caseCount": 3
+    },
+    {
+      "file": "target-repo/services/shipments.js",
+      "function": "cutoffForCarrier",
+      "classifications": [
+        "TIMEZONE"
+      ],
+      "coveredLines": [
+        29,
+        30
+      ],
+      "testFile": "pipeline/characterize/tests/shipments.cutoffForCarrier.test.js",
+      "caseCount": 3
+    }
+  ],
+  "baseline": {
+    "ciLocked": true,
+    "write": {
+      "numTests": 36,
+      "numPassed": 36,
+      "numFailed": 0,
+      "snapshotsWritten": 0,
+      "snapshotsMatched": 36,
+      "snapshotsTotal": 36
+    },
+    "lock": {
+      "numTests": 36,
+      "numPassed": 36,
+      "numFailed": 0,
+      "snapshotsWritten": 0,
+      "snapshotsMatched": 36,
+      "snapshotsTotal": 36
+    }
+  },
+  "summary": {
+    "functionCount": 12,
+    "callSitesCovered": 24,
+    "callSitesTotal": 35
+  }
+}

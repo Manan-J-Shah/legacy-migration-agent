@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`formatLong [SIMPLE_FORMAT] case 0 -> ["2026-07-14T18:30:00Z"] 1`] = `
+{
+  "ok": "July 14th 2026, 6:30:00 pm",
+}
+`;
+
+exports[`formatLong [SIMPLE_FORMAT] case 1 -> ["2026-02-28T12:00:00Z"] 1`] = `
+{
+  "ok": "February 28th 2026, 12:00:00 pm",
+}
+`;
+
+exports[`formatLong [SIMPLE_FORMAT] case 2 -> ["2026-12-31T23:59:59Z"] 1`] = `
+{
+  "ok": "December 31st 2026, 11:59:59 pm",
+}
+`;

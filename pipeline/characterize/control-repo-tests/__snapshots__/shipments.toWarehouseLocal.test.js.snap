@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`toWarehouseLocal [TIMEZONE] case 0 -> ["2026-07-16T20:05:00Z","LAX"] 1`] = `
+{
+  "ok": {
+    "localDisplay": "2026-07-16 13:05:00 PDT",
+    "localIso": "2026-07-16T13:05:00-07:00",
+    "short": "2026-07-16",
+    "timezone": "America/Los_Angeles",
+    "utc": "2026-07-16T20:05:00Z",
+    "warehouse": "LAX",
+  },
+}
+`;
+
+exports[`toWarehouseLocal [TIMEZONE] case 1 -> ["2026-07-16T20:05:00Z","EWR"] 1`] = `
+{
+  "ok": {
+    "localDisplay": "2026-07-16 16:05:00 EDT",
+    "localIso": "2026-07-16T16:05:00-04:00",
+    "short": "2026-07-16",
+    "timezone": "America/New_York",
+    "utc": "2026-07-16T20:05:00Z",
+    "warehouse": "EWR",
+  },
+}
+`;
+
+exports[`toWarehouseLocal [TIMEZONE] case 2 -> ["2026-07-16T20:05:00Z","ORD"] 1`] = `
+{
+  "ok": {
+    "localDisplay": "2026-07-16 15:05:00 CDT",
+    "localIso": "2026-07-16T15:05:00-05:00",
+    "short": "2026-07-16",
+    "timezone": "America/Chicago",
+    "utc": "2026-07-16T20:05:00Z",
+    "warehouse": "ORD",
+  },
+}
+`;

@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cutoffForCarrier [TIMEZONE] case 0 -> ["ORD","2026-07-16"] 1`] = `
+{
+  "ok": {
+    "cutoffLocal": "2026-07-16 15:00 CDT",
+    "cutoffUtc": "2026-07-16T20:00:00Z",
+    "warehouse": "ORD",
+  },
+}
+`;
+
+exports[`cutoffForCarrier [TIMEZONE] case 1 -> ["LAX","2026-01-15"] 1`] = `
+{
+  "ok": {
+    "cutoffLocal": "2026-01-15 15:00 PST",
+    "cutoffUtc": "2026-01-15T23:00:00Z",
+    "warehouse": "LAX",
+  },
+}
+`;
+
+exports[`cutoffForCarrier [TIMEZONE] case 2 -> ["EWR","2026-07-16"] 1`] = `
+{
+  "ok": {
+    "cutoffLocal": "2026-07-16 15:00 EDT",
+    "cutoffUtc": "2026-07-16T19:00:00Z",
+    "warehouse": "EWR",
+  },
+}
+`;

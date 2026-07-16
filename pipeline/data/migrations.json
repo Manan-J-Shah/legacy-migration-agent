@@ -1,0 +1,33 @@
+{
+  "migrations": [
+    {
+      "id": "dates-format-short",
+      "cluster": "SIMPLE_FORMAT",
+      "risk": "low",
+      "status": "migrated",
+      "file": "target-repo/lib/dates.js",
+      "line": 10,
+      "function": "formatShort",
+      "testFile": "pipeline/characterize/tests/dates.formatShort.test.js",
+      "before": "return moment(date).format('YYYY-MM-DD');",
+      "after": "return format(date, 'yyyy-MM-dd');",
+      "tests": {
+        "before": { "passed": 3, "total": 3 },
+        "after": { "passed": 3, "total": 3 }
+      }
+    }
+  ],
+  "flaggedCase": {
+    "id": "dates-format-long-token-risk",
+    "status": "BUG",
+    "applied": false,
+    "cluster": "SIMPLE_FORMAT",
+    "file": "target-repo/lib/dates.js",
+    "line": 14,
+    "function": "formatLong",
+    "oldOutput": "July 14th 2026, 2:30:00 pm",
+    "newOutput": "July 195th 2026, 2:30:00 PM",
+    "rationale": "This is a migration bug, not an intentional behavior change. date-fns uses Unicode tokens: D/Do represent day-of-year, while d/do represent day-of-month. Reusing Moment's Do therefore renders July 14 as the 195th day of the year. The migration must translate Moment's Do to date-fns do (and YYYY to yyyy) to preserve the locked output.",
+    "docs": "https://github.com/date-fns/date-fns/blob/main/docs/unicodeTokens.md"
+  }
+}
