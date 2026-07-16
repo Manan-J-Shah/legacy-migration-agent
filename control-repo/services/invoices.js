@@ -1,7 +1,9 @@
-var moment = require('moment');
+var { parse, isValid, differenceInDays, format } = require('date-fns');
 var config = require('../config');
 var dates = require('../lib/dates');
 var DateParseError = require('../lib/errors').DateParseError;
+
+var PARSE_FORMATS = ['MM/dd/yyyy', 'yyyy-MM-dd', 'dd.MM.yyyy'];
 
 /**
  * ERP invoice date field is notoriously dirty. Parse carefully — finance
@@ -13,13 +15,21 @@ function parseInvoiceDate(rawValue) {
       throw new DateParseError('Invoice date is empty', rawValue);
     }
 
-    var parsed = moment(rawValue, config.invoice.acceptedFormats, true);
-    if (!parsed.isValid()) {
-      // Last-ditch: let moment guess (some vendors send RFC2822)
-      parsed = moment(new Date(rawValue));
+    var parsed = null;
+    for (var i = 0; i < PARSE_FORMATS.length; i++) {
+      var attempt = parse(String(rawValue), PARSE_FORMATS[i], new Date());
+      if (isValid(attempt)) {
+        parsed = attempt;
+        break;
+      }
     }
 
-    if (!parsed.isValid()) {
+    if (!parsed || !isValid(parsed)) {
+      // Last-ditch: let Date guess (some vendors send RFC2822)
+      parsed = new Date(rawValue);
+    }
+
+    if (!isValid(parsed)) {
       throw new DateParseError(
         'Unrecognized invoice date format',
         rawValue
@@ -30,7 +40,7 @@ function parseInvoiceDate(rawValue) {
       raw: rawValue,
       iso: parsed.toISOString(),
       stamp: dates.formatInvoiceStamp(parsed),
-      fiscalMonth: parsed.format('YYYY-MM'),
+      fiscalMonth: format(parsed, 'yyyy-MM'),
     };
   } catch (err) {
     if (err.name === 'DateParseError') {
@@ -48,7 +58,10 @@ function parseInvoiceDate(rawValue) {
 
 function agingBucket(invoiceDateRaw, asOf) {
   var parsed = parseInvoiceDate(invoiceDateRaw);
-  var ageDays = moment(asOf || undefined).diff(moment(parsed.iso), 'days');
+  var ageDays = differenceInDays(
+    dates.toDate(asOf || new Date()),
+    dates.toDate(parsed.iso)
+  );
 
   var bucket;
   if (ageDays <= 30) bucket = 'current';

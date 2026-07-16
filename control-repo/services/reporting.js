@@ -1,12 +1,14 @@
-var moment = require('moment');
-require('moment/locale/de');
-require('moment/locale/fr');
+var {
+  format,
+  formatDistanceToNow,
+  formatRelative,
+  isValid,
+} = require('date-fns');
+var { enUS, de, fr } = require('date-fns/locale');
 var config = require('../config');
 var dates = require('../lib/dates');
 
-// Requiring locale packs flips the global default to the last one loaded —
-// put it back or every other job starts printing French.
-moment.locale(config.defaultLocale);
+var LOCALES = { en: enUS, de: de, fr: fr };
 
 /**
  * Weekly ops digest. EU warehouses get German copy; FR override exists for
@@ -14,29 +16,28 @@ moment.locale(config.defaultLocale);
  */
 function buildWarehouseDigest(warehouseCode, generatedAt, options) {
   options = options || {};
-  var locale = options.locale || config.reportLocale;
-  var when = moment(generatedAt || undefined);
+  var localeKey = options.locale || config.reportLocale;
+  var loc = LOCALES[localeKey] || enUS;
+  var when = generatedAt ? dates.toDate(generatedAt) : new Date();
 
-  // Switch locale for the whole block, then restore — other jobs share process.
-  var previous = moment.locale();
-  moment.locale(locale);
+  if (!isValid(when)) {
+    throw new Error('Invalid generatedAt: ' + generatedAt);
+  }
 
-  var digest = {
+  return {
     warehouse: warehouseCode,
-    locale: locale,
-    headline: when.format('dddd, D MMMM YYYY'),
-    generatedLabel: dates.formatForLocale(when, locale),
-    relative: when.fromNow(),
-    calendarHint: when.calendar(),
+    locale: localeKey,
+    headline: format(when, 'EEEE, d MMMM yyyy', { locale: loc }),
+    generatedLabel: dates.formatForLocale(when, localeKey),
+    relative: formatDistanceToNow(when, { addSuffix: true, locale: loc }),
+    calendarHint: formatRelative(when, new Date(), { locale: loc }),
   };
-
-  moment.locale(previous);
-  return digest;
 }
 
 function formatCustomerFacingEta(eta, customerLocale) {
-  // Customer emails: long localized form, not the internal YYYY-MM-DD stamps.
-  return moment(eta).locale(customerLocale || 'en').format('LLLL');
+  // Customer emails: long localized form, not the internal yyyy-MM-dd stamps.
+  var loc = LOCALES[customerLocale || 'en'] || enUS;
+  return format(dates.toDate(eta), 'PPPP', { locale: loc });
 }
 
 module.exports = {

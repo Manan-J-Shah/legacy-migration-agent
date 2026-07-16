@@ -1,4 +1,5 @@
-var moment = require('moment-timezone');
+var { format, parseISO, isValid } = require('date-fns');
+var { formatInTimeZone, fromZonedTime } = require('date-fns-tz');
 var config = require('../config');
 var dates = require('../lib/dates');
 
@@ -12,13 +13,20 @@ function toWarehouseLocal(utcTime, warehouseCode) {
     throw new Error('Unknown warehouse code: ' + warehouseCode);
   }
 
-  var local = moment.tz(utcTime, 'UTC').tz(tz);
+  var utcDate = typeof utcTime === 'string' ? parseISO(utcTime) : dates.toDate(utcTime);
+
+  // INTENTIONAL BUG
+  // Moment did moment.tz(utcTime, 'UTC').tz(tz), converting into warehouse
+  // local time. This skips that offset conversion and formats the UTC instant
+  // as if it were already local.
+  var local = utcDate;
+
   return {
     warehouse: warehouseCode,
     timezone: tz,
-    utc: moment.utc(utcTime).format(),
-    localIso: local.format(),
-    localDisplay: local.format('YYYY-MM-DD HH:mm:ss z'),
+    utc: formatInTimeZone(utcDate, 'UTC', "yyyy-MM-dd'T'HH:mm:ss'Z'"),
+    localIso: format(local, "yyyy-MM-dd'T'HH:mm:ssXXX"),
+    localDisplay: format(local, 'yyyy-MM-dd HH:mm:ss') + ' UTC',
     short: dates.formatShort(local),
   };
 }
@@ -26,13 +34,18 @@ function toWarehouseLocal(utcTime, warehouseCode) {
 function cutoffForCarrier(warehouseCode, day) {
   // Ground cutoff is 3pm local; we store the UTC instant for the sorter feed.
   var tz = config.warehouses[warehouseCode];
-  var localDay = day || moment.tz(tz).format('YYYY-MM-DD');
-  var cutoffLocal = moment.tz(localDay + ' 15:00', 'YYYY-MM-DD HH:mm', tz);
+  var localDay =
+    day || formatInTimeZone(new Date(), tz, 'yyyy-MM-dd');
+  var cutoffLocal = fromZonedTime(localDay + ' 15:00:00', tz);
+
+  if (!isValid(cutoffLocal)) {
+    throw new Error('Invalid cutoff for ' + warehouseCode);
+  }
 
   return {
     warehouse: warehouseCode,
-    cutoffLocal: cutoffLocal.format('YYYY-MM-DD HH:mm z'),
-    cutoffUtc: cutoffLocal.clone().utc().format(),
+    cutoffLocal: formatInTimeZone(cutoffLocal, tz, 'yyyy-MM-dd HH:mm zzz'),
+    cutoffUtc: formatInTimeZone(cutoffLocal, 'UTC', "yyyy-MM-dd'T'HH:mm:ss'Z'"),
   };
 }
 
