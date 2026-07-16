@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Team workstreams — Moment → date-fns</title>
+  <style>
+    :root {
+      --bg: #f3f1eb;
+      --card: #fffcf7;
+      --ink: #1a2420;
+      --muted: #5f6b65;
+      --line: #d7d2c6;
+      --ok: #1a6b4a;
+      --ok-bg: #dceee4;
+      --warn: #8a5a12;
+      --warn-bg: #f3e6cf;
+      --bad: #8f3a32;
+      --bad-bg: #f3dfda;
+      --accent: #245c48;
+      --mono: ui-monospace, Consolas, monospace;
+      --sans: "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 15px/1.5 var(--sans);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 100% 0, #d7e8de 0, transparent 28rem),
+        var(--bg);
+    }
+    .wrap { width: min(960px, calc(100% - 32px)); margin: 0 auto; padding: 32px 0 48px; }
+    h1 { margin: 0 0 8px; font-size: clamp(28px, 5vw, 40px); letter-spacing: -.03em; }
+    h2 { margin: 28px 0 10px; font-size: 20px; letter-spacing: -.02em; }
+    h3 { margin: 0 0 6px; font-size: 15px; }
+    p, li { color: var(--ink); }
+    .muted { color: var(--muted); }
+    .hero, .panel, .person {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .hero { margin-bottom: 16px; }
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+    .pill {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font: 700 11px/1 var(--mono);
+      cursor: pointer;
+    }
+    .pill.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 14px 0; }
+    .stat { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+    .stat b { display: block; font-size: 22px; letter-spacing: -.03em; }
+    .stat span { color: var(--muted); font-size: 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; background: #fff; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { background: #f7f4ee; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+    tr:last-child td { border-bottom: 0; }
+    .tag { display: inline-block; padding: 3px 8px; border-radius: 999px; font: 700 10px/1 var(--mono); }
+    .ok { color: var(--ok); background: var(--ok-bg); }
+    .warn { color: var(--warn); background: var(--warn-bg); }
+    .bad { color: var(--bad); background: var(--bad-bg); }
+    .person { display: none; margin-top: 12px; }
+    .person.show { display: block; }
+    ul.check { list-style: none; padding: 0; margin: 0; }
+    ul.check li { padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+    ul.check li:last-child { border-bottom: 0; }
+    ul.check .done { color: var(--ok); }
+    code { font-family: var(--mono); font-size: 12px; background: #eeeae2; padding: 1px 5px; border-radius: 4px; }
+    .note { margin-top: 18px; padding: 12px 14px; border: 1px solid #b9d5c6; background: var(--ok-bg); border-radius: 10px; font-size: 13px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+    @media (max-width: 720px) {
+      .stats, .grid2 { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 520px) {
+      .stats, .grid2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <h1>Moment → date-fns — team workstreams</h1>
+      <p class="muted">Works in any browser. Teammates do not need Cursor. Markdown twin: <code>docs/TEAM_WORKSTREAMS.md</code></p>
+      <p>Thesis: no tests → characterize → plan → migrate incrementally → flag ambiguity with judgment → evidence dashboard.</p>
+      <p class="muted">Phase: PR1 done-ish on <code>pr1-pipeline-hardening</code> → finish PR2 + film.</p>
+      <div class="stats">
+        <div class="stat"><b>PR1</b><span>Pipeline hardening</span></div>
+        <div class="stat"><b>PR2</b><span>Demo surface open</span></div>
+        <div class="stat"><b>4</b><span>Owners A–D</span></div>
+        <div class="stat"><b>16/41</b><span>Checklist verified/done</span></div>
+      </div>
+    </header>
+
+    <h2>Shared milestones</h2>
+    <table>
+      <thead><tr><th>#</th><th>Milestone</th><th>Done looks like</th><th>Owner</th><th>Gate</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>GitHub push</td><td>Teammates can pull</td><td>A + all</td><td><span class="tag warn">Next</span></td></tr>
+        <tr><td>2</td><td>PR1 merge</td><td>pr1 → master</td><td>A</td><td><span class="tag warn">Review</span></td></tr>
+        <tr><td>3</td><td>Pre-seed Codex</td><td>TIMEZONE.patch merge</td><td>B</td><td>After PR1</td></tr>
+        <tr><td>4</td><td>Triage artifacts</td><td>triage-results.json</td><td>B</td><td>After migrate</td></tr>
+        <tr><td>5</td><td>Dashboard</td><td>report/dashboard.html</td><td>C</td><td>Needs JSON</td></tr>
+        <tr><td>6</td><td>Demo script</td><td>DEMO_SCRIPT.md</td><td>D</td><td>Parallel</td></tr>
+        <tr><td>7</td><td>Rehearsal</td><td>force-fail + flagged panel</td><td>All (D leads)</td><td><span class="tag bad">After 3–6</span></td></tr>
+        <tr><td>8</td><td>Film</td><td>Recorded thesis demo</td><td>D + cast</td><td><span class="tag bad">After rehearsal</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2>Person focus</h2>
+    <div class="pills" id="tabs">
+      <button class="pill active" data-p="A" type="button">A: Pipeline</button>
+      <button class="pill" data-p="B" type="button">B: Judgment</button>
+      <button class="pill" data-p="C" type="button">C: Evidence</button>
+      <button class="pill" data-p="D" type="button">D: Narrative</button>
+    </div>
+
+    <section class="person show" id="pA">
+      <h3>Person A — Pipeline / migrate owner</h3>
+      <p class="muted">Prove guarded incremental migrate. Unblocks everyone.</p>
+      <p><strong>Branch:</strong> <code>pr1-pipeline-hardening → master</code></p>
+      <p><strong>Out of scope:</strong> triage-results, report dashboard, DEMO_SCRIPT, Codex patches.</p>
+      <ul class="check">
+        <li class="done">[x] VERIFY awkward sites + discovery §3.4 buckets</li>
+        <li class="done">[x] VERIFY migrate modules + handoff .md files</li>
+        <li>[ ] VERIFY migrate.json / migration-log.json on clean tree</li>
+        <li>[ ] Stabilise SIMPLE_FORMAT jest tests</li>
+        <li>[ ] Filmable MIGRATE_FORCE_FAIL dry-run</li>
+        <li>[ ] Merge PR1 → master; announce schema freeze</li>
+        <li>[ ] Protect migrate/log field contracts</li>
+      </ul>
+    </section>
+
+    <section class="person" id="pB">
+      <h3>Person B — Codex / judgment owner</h3>
+      <p class="muted">Prove judgment: TIMEZONE handoff merge + BUG/NEEDS_REVIEW rationale.</p>
+      <p><strong>Branch:</strong> <code>feature/pr2-triage-judgment</code></p>
+      <p><strong>Out of scope:</strong> dashboard HTML, SIMPLE_FORMAT codemod, DEMO_SCRIPT ownership.</p>
+      <ul class="check">
+        <li class="done">[x] VERIFY handoff TIMEZONE.md prompts</li>
+        <li>[ ] §7.0: Codex → TIMEZONE.patch</li>
+        <li>[ ] npm run migrate applies patch + logs merge</li>
+        <li>[ ] Intentional judgment case → BUG evidence</li>
+        <li>[ ] triage/index.js → triage-results.json only</li>
+        <li>[ ] Verdict mapping + triage tests</li>
+        <li>[ ] Hand paths/commands to C and D</li>
+      </ul>
+    </section>
+
+    <section class="person" id="pC">
+      <h3>Person C — Evidence UI owner</h3>
+      <p class="muted">Dashboard is the proof surface — real JSON only, four panels.</p>
+      <p><strong>Branch:</strong> <code>feature/pr2-report-dashboard</code></p>
+      <p><strong>Out of scope:</strong> fake rows, Codex, migrate orchestrator, DEMO_SCRIPT content.</p>
+      <ul class="check">
+        <li class="done">[x] VERIFY pipeline/dashboard v1 to reuse</li>
+        <li>[ ] Move to pipeline/report/dashboard.html + js/css/server</li>
+        <li>[ ] Wire manifest, plan, migration-log, triage-results, migrate</li>
+        <li>[ ] Panels: summary, clusters, diffs, flagged rationale</li>
+        <li>[ ] Missing JSON = explicit error</li>
+        <li>[ ] package.json dashboard → report server</li>
+        <li>[ ] Give D URL + screenshot slots</li>
+      </ul>
+    </section>
+
+    <section class="person" id="pD">
+      <h3>Person D — Demo / narrative owner</h3>
+      <p class="muted">Script and film the thesis so it isn’t improvised.</p>
+      <p><strong>Branch:</strong> <code>feature/pr2-demo-script</code></p>
+      <p><strong>Out of scope:</strong> implement migrate/triage/dashboard; change schemas.</p>
+      <ul class="check">
+        <li class="done">[x] VERIFY design §7 + plan Task 12</li>
+        <li>[ ] DEMO_SCRIPT beat 0 (§7.0 prep)</li>
+        <li>[ ] Beats 1–6 with real commands</li>
+        <li>[ ] Screenshot slots only (no full voiceover)</li>
+        <li>[ ] Teammate README: clone/pull/branch/run</li>
+        <li>[ ] Lead rehearsal (force-fail + flagged panel)</li>
+        <li>[ ] Schedule film</li>
+      </ul>
+    </section>
+
+    <h2>Artifact contracts</h2>
+    <table>
+      <thead><tr><th>Artifact</th><th>May write</th><th>Read only</th><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td><code>manifest.json</code> / <code>plan.json</code></td><td>A</td><td>B C D</td><td>via discovery / planner</td></tr>
+        <tr><td><code>migrate.json</code> / <code>migration-log.json</code></td><td>A</td><td>B C D</td><td>freeze after PR1</td></tr>
+        <tr><td><code>handoffs/*.md</code></td><td>A</td><td>B</td><td>Codex prompts</td></tr>
+        <tr><td><code>handoffs/*.patch</code></td><td>B</td><td>A applies</td><td>TIMEZONE.patch required</td></tr>
+        <tr><td><code>triage-results.json</code></td><td>B</td><td>C D</td><td>never triage.json</td></tr>
+        <tr><td><code>report/dashboard.*</code></td><td>C</td><td>D</td><td>single SPA</td></tr>
+        <tr><td><code>DEMO_SCRIPT.md</code></td><td>D</td><td>all</td><td>six beats + prep</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Collision rules</h2>
+    <div class="panel">
+      <ul>
+        <li>Never force-push <code>master</code>. Do not rename master → main.</li>
+        <li>Stack PR2 features on master only after PR1 merges.</li>
+        <li>Freeze migrate/log field names after PR1 — B and C depend on them.</li>
+        <li>Do not re-characterize the three awkward sites. control-repo stays a side experiment.</li>
+      </ul>
+    </div>
+
+    <h2>Critical path (blocks film)</h2>
+    <table>
+      <thead><tr><th>If late…</th><th>Beat that dies</th><th>Mitigation</th></tr></thead>
+      <tbody>
+        <tr><td>PR1 / migrate unstable</td><td>Beat 4</td><td>A force-fail dry-run before film</td></tr>
+        <tr><td>No TIMEZONE.patch</td><td>Beats 4–5</td><td>B pre-seed day before rehearsal</td></tr>
+        <tr><td>No flagged rationale</td><td>Beat 6</td><td>B ships ≥1 BUG/NEEDS_REVIEW</td></tr>
+        <tr><td>Dashboard not in report/</td><td>Beats 5–6</td><td>C consolidates + wires triage</td></tr>
+        <tr><td>Script missing commands</td><td>Whole film</td><td>D drafts from A/B/C</td></tr>
+        <tr><td>No failure rehearsal</td><td>Rollback moment</td><td>A+D run FORCE_FAIL live</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      <strong>How to share:</strong> commit these files, push the repo, send teammates
+      <code>docs/team-workstreams.html</code> (double-click) or
+      <code>docs/TEAM_WORKSTREAMS.md</code> (GitHub checklist).
+      No Cursor required. Optional later: GitHub Pages on this HTML file.
+    </div>
+  </div>
+  <script>
+    const tabs = document.querySelectorAll('#tabs .pill');
+    const panels = { A: pA, B: pB, C: pC, D: pD };
+    tabs.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        tabs.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        Object.values(panels).forEach((p) => p.classList.remove('show'));
+        panels[btn.dataset.p].classList.add('show');
+      });
+    });
+  </script>
+</body>
+</html>
