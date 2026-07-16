@@ -12,19 +12,13 @@
       },
       {
         "file": "target-repo/lib/dates.js",
-        "line": 9,
-        "surroundingFunction": "formatShort",
-        "classification": "SIMPLE_FORMAT"
-      },
-      {
-        "file": "target-repo/lib/dates.js",
-        "line": 13,
+        "line": 14,
         "surroundingFunction": "formatLong",
         "classification": "SIMPLE_FORMAT"
       },
       {
         "file": "target-repo/lib/dates.js",
-        "line": 23,
+        "line": 24,
         "surroundingFunction": "formatInvoiceStamp",
         "classification": "SIMPLE_FORMAT"
       },
@@ -36,13 +30,13 @@
       },
       {
         "file": "target-repo/services/invoices.js",
-        "line": 51,
+        "line": 55,
         "surroundingFunction": "agingBucket",
         "classification": "SIMPLE_FORMAT"
       },
       {
         "file": "target-repo/services/invoices.js",
-        "line": 51,
+        "line": 55,
         "surroundingFunction": "agingBucket",
         "classification": "SIMPLE_FORMAT"
       },
@@ -54,7 +48,7 @@
       },
       {
         "file": "target-repo/services/reporting.js",
-        "line": 18,
+        "line": 27,
         "surroundingFunction": "buildWarehouseDigest",
         "classification": "SIMPLE_FORMAT"
       },
@@ -66,20 +60,38 @@
       },
       {
         "file": "target-repo/services/scheduler.js",
-        "line": 11,
+        "line": 37,
         "surroundingFunction": "buildFulfillmentWindow",
         "classification": "SIMPLE_FORMAT"
       },
       {
-        "file": "target-repo/services/scheduler.js",
-        "line": 37,
-        "surroundingFunction": "buildFulfillmentWindow",
+        "file": "target-repo/services/shipments.js",
+        "line": 20,
+        "surroundingFunction": "toWarehouseLocal",
+        "classification": "SIMPLE_FORMAT"
+      },
+      {
+        "file": "target-repo/services/shipments.js",
+        "line": 21,
+        "surroundingFunction": "toWarehouseLocal",
+        "classification": "SIMPLE_FORMAT"
+      },
+      {
+        "file": "target-repo/services/shipments.js",
+        "line": 34,
+        "surroundingFunction": "cutoffForCarrier",
+        "classification": "SIMPLE_FORMAT"
+      },
+      {
+        "file": "target-repo/services/vendorExports.js",
+        "line": 1,
+        "surroundingFunction": "<module>",
         "classification": "SIMPLE_FORMAT"
       }
     ],
     "summary": {
-      "usageCount": 12,
-      "fileCount": 4
+      "usageCount": 14,
+      "fileCount": 6
     }
   },
   {
@@ -134,10 +146,16 @@
         "line": 43,
         "surroundingFunction": "bumpRetryWindow",
         "classification": "MUTATION_CHAIN"
+      },
+      {
+        "file": "target-repo/services/scheduler.js",
+        "line": 61,
+        "surroundingFunction": "shiftSharedWindow",
+        "classification": "MUTATION_CHAIN"
       }
     ],
     "summary": {
-      "usageCount": 8,
+      "usageCount": 9,
       "fileCount": 1
     }
   },
@@ -148,8 +166,14 @@
     "usages": [
       {
         "file": "target-repo/lib/dates.js",
-        "line": 18,
+        "line": 19,
         "surroundingFunction": "formatForLocale",
+        "classification": "LOCALE_DEPENDENT"
+      },
+      {
+        "file": "target-repo/lib/dates.js",
+        "line": 44,
+        "surroundingFunction": "normalizeBusinessDate",
         "classification": "LOCALE_DEPENDENT"
       },
       {
@@ -172,25 +196,19 @@
       },
       {
         "file": "target-repo/services/reporting.js",
-        "line": 21,
-        "surroundingFunction": "buildWarehouseDigest",
-        "classification": "LOCALE_DEPENDENT"
-      },
-      {
-        "file": "target-repo/services/reporting.js",
         "line": 22,
         "surroundingFunction": "buildWarehouseDigest",
         "classification": "LOCALE_DEPENDENT"
       },
       {
         "file": "target-repo/services/reporting.js",
-        "line": 33,
+        "line": 37,
         "surroundingFunction": "buildWarehouseDigest",
         "classification": "LOCALE_DEPENDENT"
       },
       {
         "file": "target-repo/services/reporting.js",
-        "line": 39,
+        "line": 43,
         "surroundingFunction": "formatCustomerFacingEta",
         "classification": "LOCALE_DEPENDENT"
       }
@@ -230,15 +248,21 @@
         "classification": "TIMEZONE"
       },
       {
-        "file": "target-repo/services/shipments.js",
-        "line": 30,
-        "surroundingFunction": "cutoffForCarrier",
+        "file": "target-repo/services/vendorExports.js",
+        "line": 17,
+        "surroundingFunction": "formatVendorFiscalPeriod",
+        "classification": "TIMEZONE"
+      },
+      {
+        "file": "target-repo/services/vendorExports.js",
+        "line": 18,
+        "surroundingFunction": "formatVendorFiscalPeriod",
         "classification": "TIMEZONE"
       }
     ],
     "summary": {
-      "usageCount": 5,
-      "fileCount": 1
+      "usageCount": 6,
+      "fileCount": 2
     }
   },
   {
@@ -248,13 +272,13 @@
     "usages": [
       {
         "file": "target-repo/services/invoices.js",
-        "line": 16,
+        "line": 19,
         "surroundingFunction": "parseInvoiceDate",
         "classification": "WRAPPED_ERROR_HANDLING"
       },
       {
         "file": "target-repo/services/invoices.js",
-        "line": 19,
+        "line": 33,
         "surroundingFunction": "parseInvoiceDate",
         "classification": "WRAPPED_ERROR_HANDLING"
       }

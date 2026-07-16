@@ -8,6 +8,14 @@ const {
 } = require('./astUtil');
 
 const MUTATION_METHODS = new Set(['add', 'subtract']);
+const TRACKED_METHODS = new Set([
+  'add',
+  'subtract',
+  'locale',
+  'tz',
+  'utc',
+  'format',
+]);
 
 function parseSource(code, filePath) {
   return parser.parse(code, {
@@ -188,16 +196,32 @@ function collectUsages(code, relativeFile) {
         node.type === 'VariableDeclarator' &&
         node.id &&
         node.id.type === 'Identifier' &&
-        node.init &&
-        initYieldsMoment(node.init, momentNames, momentValues)
+        node.init
       ) {
-        momentValues.add(node.id.name);
+        if (initYieldsMoment(node.init, momentNames, momentValues)) {
+          momentValues.add(node.id.name);
+        } else if (
+          node.init.type === 'Identifier' &&
+          momentValues.has(node.init.name)
+        ) {
+          // Alias: var alias = sharedMoment
+          momentValues.add(node.id.name);
+        }
       }
 
       if (node.type !== 'CallExpression') return;
 
       const momentHit = isMomentCallee(node.callee, momentNames);
       if (momentHit) {
+        // Binding-only constructions are tracked via momentValues; classify
+        // later method calls on the binding instead of emitting SIMPLE_FORMAT.
+        const isBindingOnly =
+          parent &&
+          parent.type === 'VariableDeclarator' &&
+          parent.init === node;
+        if (isBindingOnly) {
+          return;
+        }
         const chainMethods = collectOutwardChain(node, parent);
         usages.push({
           file: relativeFile,
@@ -218,25 +242,34 @@ function collectUsages(code, relativeFile) {
       if (
         node.callee.type === 'MemberExpression' &&
         !node.callee.computed &&
-        node.callee.property.type === 'Identifier' &&
-        MUTATION_METHODS.has(node.callee.property.name)
+        node.callee.property.type === 'Identifier'
       ) {
+        const method = node.callee.property.name;
         const rootId = rootIdentifier(node.callee.object);
-        if (rootId && momentValues.has(rootId)) {
-          usages.push({
-            file: relativeFile,
-            line: node.loc.start.line,
-            surroundingFunction: surroundingFunction(ancestors),
-            classification: classifyCall({
-              inTry: inTryBlock(ancestors),
-              staticMethod: null,
-              chainMethods: [node.callee.property.name],
-              fromTimezoneModule: false,
-              isLocaleRequire: false,
-              isMutationCall: true,
-            }),
-          });
-        }
+        if (!rootId || !momentValues.has(rootId)) return;
+        if (!TRACKED_METHODS.has(method)) return;
+
+        // Prefer the innermost call on an identifier (m.locale().format → locale
+        // owns the outward chain). Still allow clone().add via rootIdentifier.
+        const objectIsDirectId = node.callee.object.type === 'Identifier';
+        if (!objectIsDirectId && !MUTATION_METHODS.has(method)) return;
+
+        const chainMethods = objectIsDirectId
+          ? [method, ...collectOutwardChain(node, parent)]
+          : [method];
+        usages.push({
+          file: relativeFile,
+          line: node.loc.start.line,
+          surroundingFunction: surroundingFunction(ancestors),
+          classification: classifyCall({
+            inTry: inTryBlock(ancestors),
+            staticMethod: null,
+            chainMethods,
+            fromTimezoneModule: false,
+            isLocaleRequire: false,
+            isMutationCall: MUTATION_METHODS.has(method),
+          }),
+        });
       }
     },
   });
