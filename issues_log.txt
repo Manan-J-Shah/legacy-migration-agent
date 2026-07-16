@@ -37,7 +37,13 @@ issues_log
 - Problem: the team-document commit failed because Git could not determine an author identity
 - Root cause: no repository or global user.name/user.email was configured in the isolated worktree environment
 - Solution: reused the repository's existing control-repo/control@local commit identity through one-command environment variables, without creating persistent config
+
 [2026-07-16] GitHub API verification initially returned errors
 - Problem: unauthenticated content checks returned 404 for the private repository, followed by one transient 503 branch response
 - Root cause: the REST request lacked repository credentials; GitHub then had a temporary service response
 - Solution: obtained the existing credential through Git's credential helper without printing it, authenticated the API requests, and retried the transient branch check successfully
+
+[2026-07-16] issue-log entries lost their separator
+- Problem: the two task-resolution entries appeared without a blank line between them
+- Root cause: PowerShell here-string boundary handling consumed the intended leading separator during the second append
+- Solution: normalized the log to LF and inserted the separator explicitly while preserving all existing content
