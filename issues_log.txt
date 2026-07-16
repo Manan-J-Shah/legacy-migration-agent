@@ -32,3 +32,8 @@ issues_log
 - Problem: TARGET_ROOT pointed at Desktop/control-repo instead of the workspace
 - Root cause: pipeline/repoConfig.js used path.join(__dirname, '..', '..') from pipeline/
 - Solution: use path.join(__dirname, '..') as ROOT
+
+[2026-07-16] team-doc publish lacked Git author identity
+- Problem: the team-document commit failed because Git could not determine an author identity
+- Root cause: no repository or global user.name/user.email was configured in the isolated worktree environment
+- Solution: reused the repository's existing control-repo/control@local commit identity through one-command environment variables, without creating persistent config
