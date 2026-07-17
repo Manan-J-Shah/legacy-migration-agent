@@ -1,0 +1,118 @@
+{
+  "baseBranch": "pr1-pipeline-hardening",
+  "entries": [
+    {
+      "id": 0,
+      "timestamp": "2026-07-16T22:29:49.144Z",
+      "clusterId": "SIMPLE_FORMAT",
+      "branch": "migrate/SIMPLE_FORMAT",
+      "action": "branch_created",
+      "status": "ok",
+      "detail": "migrate/SIMPLE_FORMAT"
+    },
+    {
+      "id": 1,
+      "timestamp": "2026-07-16T22:29:49.150Z",
+      "clusterId": "SIMPLE_FORMAT",
+      "branch": "migrate/SIMPLE_FORMAT",
+      "action": "transform_applied",
+      "status": "ok",
+      "detail": "SIMPLE_FORMAT codemod on 6 file(s)"
+    },
+    {
+      "id": 2,
+      "timestamp": "2026-07-16T22:29:49.153Z",
+      "clusterId": "SIMPLE_FORMAT",
+      "branch": "migrate/SIMPLE_FORMAT",
+      "action": "force_fail",
+      "status": "failed",
+      "detail": "MIGRATE_FORCE_FAIL=SIMPLE_FORMAT"
+    },
+    {
+      "id": 3,
+      "timestamp": "2026-07-16T22:29:49.159Z",
+      "clusterId": "SIMPLE_FORMAT",
+      "branch": "migrate/SIMPLE_FORMAT",
+      "action": "rollback_printed",
+      "status": "failed",
+      "detail": "git checkout pr1-pipeline-hardening && git branch -D migrate/SIMPLE_FORMAT"
+    },
+    {
+      "id": 4,
+      "timestamp": "2026-07-16T22:29:50.096Z",
+      "clusterId": "MUTATION_CHAIN",
+      "branch": "migrate/MUTATION_CHAIN",
+      "action": "branch_created",
+      "status": "ok",
+      "detail": "migrate/MUTATION_CHAIN"
+    },
+    {
+      "id": 5,
+      "timestamp": "2026-07-16T22:29:50.099Z",
+      "clusterId": "MUTATION_CHAIN",
+      "branch": "migrate/MUTATION_CHAIN",
+      "action": "handoff_written",
+      "status": "skipped",
+      "detail": "pending_external (written)"
+    },
+    {
+      "id": 6,
+      "timestamp": "2026-07-16T22:29:51.185Z",
+      "clusterId": "LOCALE_DEPENDENT",
+      "branch": "migrate/LOCALE_DEPENDENT",
+      "action": "branch_created",
+      "status": "ok",
+      "detail": "migrate/LOCALE_DEPENDENT"
+    },
+    {
+      "id": 7,
+      "timestamp": "2026-07-16T22:29:51.188Z",
+      "clusterId": "LOCALE_DEPENDENT",
+      "branch": "migrate/LOCALE_DEPENDENT",
+      "action": "handoff_written",
+      "status": "skipped",
+      "detail": "pending_external (written)"
+    },
+    {
+      "id": 8,
+      "timestamp": "2026-07-16T22:29:51.983Z",
+      "clusterId": "TIMEZONE",
+      "branch": "migrate/TIMEZONE",
+      "action": "branch_created",
+      "status": "ok",
+      "detail": "migrate/TIMEZONE"
+    },
+    {
+      "id": 9,
+      "timestamp": "2026-07-16T22:29:51.988Z",
+      "clusterId": "TIMEZONE",
+      "branch": "migrate/TIMEZONE",
+      "action": "handoff_written",
+      "status": "skipped",
+      "detail": "pending_external (written)"
+    },
+    {
+      "id": 10,
+      "timestamp": "2026-07-16T22:29:52.854Z",
+      "clusterId": "WRAPPED_ERROR_HANDLING",
+      "branch": "migrate/WRAPPED_ERROR_HANDLING",
+      "action": "branch_created",
+      "status": "ok",
+      "detail": "migrate/WRAPPED_ERROR_HANDLING"
+    },
+    {
+      "id": 11,
+      "timestamp": "2026-07-16T22:29:52.858Z",
+      "clusterId": "WRAPPED_ERROR_HANDLING",
+      "branch": "migrate/WRAPPED_ERROR_HANDLING",
+      "action": "handoff_written",
+      "status": "skipped",
+      "detail": "pending_external (written)"
+    }
+  ],
+  "summary": {
+    "migrated": 0,
+    "failed": 1,
+    "pendingExternal": 4
+  }
+}

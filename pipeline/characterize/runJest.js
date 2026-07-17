@@ -21,17 +21,19 @@ const JEST_BIN = path.join(
  */
 function runJest(opts) {
   const ci = Boolean(opts && opts.ci);
-  const testsGlob =
-    (opts && opts.testsDir) || 'pipeline/characterize/tests';
+  const tests =
+    (opts && opts.tests) ||
+    (opts && opts.testsDir) ||
+    'pipeline/characterize/tests';
   const jsonOut = path.join(__dirname, '.jest-result.json');
 
-  const args = [
-    JEST_BIN,
-    testsGlob,
-    '--json',
-    '--outputFile',
-    jsonOut,
-  ];
+  const args = [JEST_BIN];
+  if (Array.isArray(tests)) {
+    for (const t of tests) args.push(t);
+  } else {
+    args.push(tests);
+  }
+  args.push('--json', '--outputFile', jsonOut);
   if (ci) args.push('--ci');
 
   const proc = spawnSync(process.execPath, args, {
