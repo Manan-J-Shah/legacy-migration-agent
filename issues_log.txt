@@ -52,3 +52,8 @@ issues_log
 - Problem: `npm test` failed with 8 snapshot mismatches in invoices.agingBucket, invoices.parseInvoiceDate, and reporting.buildWarehouseDigest
 - Root cause: PR1 added awkward sites (ambiguous normalizeBusinessDate -> new businessDate/periodLabel fields) to target-repo services after the pre-migration characterization baseline was locked, so the snapshots no longer matched the current legacy output
 - Solution: re-lock the pre-migration baseline by regenerating those 3 snapshot files with jest -u under TZ=UTC (matching runJest); npm test back to 36/36
+
+[2026-07-17] force-fail migrate dry-run corrupted pipeline/data/migrate.json on re-run
+- Problem: re-running `npm run migrate` (force-fail SIMPLE_FORMAT) produced a migrate.json with dangling logEntryIds (12-15) not present in migration-log.json (0-11) plus CRLF noise in the code snippets
+- Root cause: gitOps.checkoutBase runs `git reset --hard` between clusters, which restores the committed (tracked) migration-log.json mid-run, so appendEntry keeps counting from the committed 12 entries while the final migrate.json (written after the loop) is not reset
+- Solution: the dry-run is only meant to confirm the rollback command prints and the tree stays clean; restored the already-consistent committed migrate.json (git checkout) instead of committing the corrupted re-run output, deleted the 5 temp migrate/* branches, confirmed clean tree on pr1-pipeline-hardening
