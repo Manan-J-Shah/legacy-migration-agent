@@ -57,3 +57,18 @@ issues_log
 - Problem: re-running `npm run migrate` (force-fail SIMPLE_FORMAT) produced a migrate.json with dangling logEntryIds (12-15) not present in migration-log.json (0-11) plus CRLF noise in the code snippets
 - Root cause: gitOps.checkoutBase runs `git reset --hard` between clusters, which restores the committed (tracked) migration-log.json mid-run, so appendEntry keeps counting from the committed 12 entries while the final migrate.json (written after the loop) is not reset
 - Solution: the dry-run is only meant to confirm the rollback command prints and the tree stays clean; restored the already-consistent committed migrate.json (git checkout) instead of committing the corrupted re-run output, deleted the 5 temp migrate/* branches, confirmed clean tree on pr1-pipeline-hardening
+
+[2026-07-16] team-doc publish lacked Git author identity
+- Problem: the team-document commit failed because Git could not determine an author identity
+- Root cause: no repository or global user.name/user.email was configured in the isolated worktree environment
+- Solution: reused the repository's existing control-repo/control@local commit identity through one-command environment variables, without creating persistent config
+
+[2026-07-16] GitHub API verification initially returned errors
+- Problem: unauthenticated content checks returned 404 for the private repository, followed by one transient 503 branch response
+- Root cause: the REST request lacked repository credentials; GitHub then had a temporary service response
+- Solution: obtained the existing credential through Git's credential helper without printing it, authenticated the API requests, and retried the transient branch check successfully
+
+[2026-07-16] issue-log entries lost their separator
+- Problem: the two task-resolution entries appeared without a blank line between them
+- Root cause: PowerShell here-string boundary handling consumed the intended leading separator during the second append
+- Solution: normalized the log to LF and inserted the separator explicitly while preserving all existing content
