@@ -42,3 +42,13 @@ issues_log
 - Problem: pipeline/migrate/index.js grew past the project max when wiring the per-cluster loop
 - Root cause: orchestrator + cluster loop lived in one module
 - Solution: split cluster processing into pipeline/migrate/clusterLoop.js; keep index.js as wiring only
+
+[2026-07-16] initial git push to new private GitHub repo failed
+- Problem: after `gh repo create`, `git push` reported repository not found for Manan-J-Shah/legacy-migration-agent
+- Root cause: local git was not using the GitHub CLI credential helper for HTTPS
+- Solution: run `gh auth setup-git`, then push master, pr1-pipeline-hardening, and mutated-migration
+
+[2026-07-17] npm test red on pr1-pipeline-hardening (8 characterization snapshots failed)
+- Problem: `npm test` failed with 8 snapshot mismatches in invoices.agingBucket, invoices.parseInvoiceDate, and reporting.buildWarehouseDigest
+- Root cause: PR1 added awkward sites (ambiguous normalizeBusinessDate -> new businessDate/periodLabel fields) to target-repo services after the pre-migration characterization baseline was locked, so the snapshots no longer matched the current legacy output
+- Solution: re-lock the pre-migration baseline by regenerating those 3 snapshot files with jest -u under TZ=UTC (matching runJest); npm test back to 36/36
