@@ -72,3 +72,13 @@ issues_log
 - Problem: the two task-resolution entries appeared without a blank line between them
 - Root cause: PowerShell here-string boundary handling consumed the intended leading separator during the second append
 - Solution: normalized the log to LF and inserted the separator explicitly while preserving all existing content
+
+[2026-07-17] isolated PR2 worktree had no node_modules to run jest/migrate
+- Problem: `npm run migrate` and `npx jest` could not run in the feature/pr2-triage-judgment worktree (jest and target-repo deps missing)
+- Root cause: git worktrees do not copy the gitignored node_modules; the pipeline keeps deps in root node_modules (jest/@babel) and target-repo/node_modules (moment/date-fns)
+- Solution: created directory junctions from the worktree to the main clone's node_modules and target-repo/node_modules (read-only during tests, gitignored so the tree stays clean)
+
+[2026-07-17] migration-log.json carried stale entries into the Codex TIMEZONE run
+- Problem: running `npm run migrate` on the feature branch appended the new run's entries onto the previous force-fail run's 12 committed entries, mixing timestamps and leaving a misleading summary
+- Root cause: gitOps.checkoutBase runs `git reset --hard` inside the first createBranch, which restores the committed migration-log.json and clobbers the emptyLog reset that run() writes at start; appendEntry then continues from the stale committed entries
+- Solution: seeded a fresh empty migration-log.json (committed) before re-running migrate so reset --hard restores an empty log; the run now records only this run's SIMPLE_FORMAT + TIMEZONE ("applied handoff patch" + "tests passed") entries. Did not modify the schema-frozen migrate/log code; migrate.json (status: migrated) plus the git "Merge migrate/TIMEZONE" commit remain the canonical record of the Codex-driven merge consumed by triage
