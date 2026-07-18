@@ -27,6 +27,33 @@
       "action": "tests_run",
       "status": "ok",
       "detail": "tests passed"
+    },
+    {
+      "id": 3,
+      "timestamp": "2026-07-18T00:06:04.664Z",
+      "clusterId": "TIMEZONE",
+      "branch": "migrate/TIMEZONE",
+      "action": "branch_created",
+      "status": "ok",
+      "detail": "migrate/TIMEZONE"
+    },
+    {
+      "id": 4,
+      "timestamp": "2026-07-18T00:06:04.788Z",
+      "clusterId": "TIMEZONE",
+      "branch": "migrate/TIMEZONE",
+      "action": "transform_applied",
+      "status": "ok",
+      "detail": "applied handoff patch"
+    },
+    {
+      "id": 5,
+      "timestamp": "2026-07-18T00:06:10.548Z",
+      "clusterId": "TIMEZONE",
+      "branch": "migrate/TIMEZONE",
+      "action": "tests_run",
+      "status": "ok",
+      "detail": "tests passed"
     }
   ],
   "summary": {
