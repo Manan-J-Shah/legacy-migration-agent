@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Migration Evidence Dashboard</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Evidence dashboard</p>
+        <h1>Moment.js → date-fns</h1>
+        <p class="lede">Real pipeline artifacts only — discovery, migrate, and triage evidence.</p>
+      </div>
+      <div class="health" id="pipeline-health">
+        <span class="pulse"></span><span>Loading pipeline data…</span>
+      </div>
+    </header>
+
+    <!-- Panel 1: summary bar (migrate.json summary + triage-results.json + manifest.json) -->
+    <section class="metrics" id="summary" aria-label="Pipeline summary"></section>
+
+    <!-- Panel 2: cluster table (plan.json + migrate.json status/coverage) -->
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Clusters</p>
+          <h2>Cluster status &amp; coverage</h2>
+        </div>
+        <p class="hint">Click a row to inspect its diff and migration log</p>
+      </div>
+      <div id="clusters"></div>
+    </section>
+
+    <!-- Panel 3: before/after diff for the selected cluster (migrate.json files[]) -->
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Applied changes</p>
+          <h2>Before / after diff</h2>
+        </div>
+      </div>
+      <div id="diff"></div>
+    </section>
+
+    <!-- Panel 4: flagged BUG / NEEDS_REVIEW verdicts (triage-results.json) -->
+    <section class="flag-panel" id="flagged" aria-live="polite"></section>
+
+    <footer>
+      <span>Sources: manifest.json · plan.json · migrate.json · migration-log.json · triage-results.json</span>
+    </footer>
+  </main>
+  <script type="module" src="./dashboard.js"></script>
+</body>
+</html>

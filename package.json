@@ -12,7 +12,7 @@
     "migrate": "node pipeline/migrate/index.js",
     "triage": "node pipeline/triage/index.js",
     "report": "node pipeline/report/index.js",
-    "dashboard": "node pipeline/dashboard/server.js",
+    "dashboard": "node pipeline/report/server.js",
     "pipeline": "npm run discovery && npm run characterize && npm run planner && npm run migrate && npm run triage && npm run report",
     "test": "node pipeline/characterize/ci.js"
   },
