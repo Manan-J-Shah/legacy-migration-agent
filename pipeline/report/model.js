@@ -7,8 +7,9 @@
 //                          clusters:[{clusterId,status,coverage,tests,files:[{path,before,after,changes}],logEntryIds}] }
 //   plan.json         -> [{ type, risk, order, summary:{usageCount,fileCount} }]
 //   migration-log.json-> { entries:[{id,timestamp,clusterId,branch,action,status,detail}] }
-//   triage-results.json-> { results:[{clusterId,verdict:'OK'|'BUG'|'NEEDS_REVIEW',rationale,file?,function?,line?}],
-//                           summary?:{OK,BUG,NEEDS_REVIEW} }  (or a bare results array)
+//   triage-results.json-> { results:[{clusterId,verdict:'OK'|'BUG'|'NEEDS_REVIEW',status,coverage,tests,rationale}],
+//                           summary:{ok,bug,needsReview,total} }  (real Person B schema; a bare
+//                           results array is also tolerated)
 
 function migrateClusterIndex(sources) {
   const migrate = sources.migrate;
@@ -18,6 +19,21 @@ function migrateClusterIndex(sources) {
     index[cluster.clusterId] = cluster;
   });
   return index;
+}
+
+// Robust migrate status tally derived from clusters[].status, NOT migrate.json
+// summary — the schema-frozen `git reset --hard` between clusters can drop the
+// summary counters (and merge-log entries) to 0 even when clusters migrated.
+// Status strings are snake_case (pending_external); summary keys are camelCase.
+export function migrateStatusCounts(sources) {
+  const migrate = sources.migrate;
+  const clusters = (migrate.ok && migrate.data && migrate.data.clusters) || [];
+  const counts = { migrated: 0, failed: 0, pendingExternal: 0, skippedUnguarded: 0 };
+  clusters.forEach((cluster) => {
+    const key = String(cluster.status || '').replace(/_([a-z])/g, (_, c) => c.toUpperCase());
+    if (counts[key] != null) counts[key] += 1;
+  });
+  return counts;
 }
 
 // Normalize triage-results.json into a flat list regardless of container shape.
@@ -39,9 +55,9 @@ export function verdictCounts(sources) {
   const summary = sources.triage.ok && sources.triage.data && sources.triage.data.summary;
   if (summary) {
     return {
-      OK: summary.OK || 0,
-      BUG: summary.BUG || 0,
-      NEEDS_REVIEW: summary.NEEDS_REVIEW || 0,
+      OK: summary.ok || 0,
+      BUG: summary.bug || 0,
+      NEEDS_REVIEW: summary.needsReview || 0,
     };
   }
   const counts = { OK: 0, BUG: 0, NEEDS_REVIEW: 0 };
@@ -57,15 +73,15 @@ export function summaryMetrics(sources) {
   const migrate = sources.migrate;
   const manifest = sources.manifest;
   const triage = sources.triage;
-  const summary = (migrate.ok && migrate.data && migrate.data.summary) || {};
+  const statusCounts = migrateStatusCounts(sources);
   const counts = verdictCounts(sources);
   const usages = manifest.ok && Array.isArray(manifest.data) ? manifest.data.length : null;
   return [
     metric('Moment usages', manifest, usages),
-    metric('Migrated', migrate, summary.migrated),
-    metric('Failed', migrate, summary.failed, 'bug'),
-    metric('Pending external', migrate, summary.pendingExternal),
-    metric('Skipped unguarded', migrate, summary.skippedUnguarded),
+    metric('Migrated', migrate, statusCounts.migrated),
+    metric('Failed', migrate, statusCounts.failed, 'bug'),
+    metric('Pending external', migrate, statusCounts.pendingExternal),
+    metric('Skipped unguarded', migrate, statusCounts.skippedUnguarded),
     metric('OK', triage, counts.OK, 'ok'),
     metric('BUG', triage, counts.BUG, 'bug'),
     metric('Needs review', triage, counts.NEEDS_REVIEW, 'review'),
