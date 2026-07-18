@@ -1,0 +1,54 @@
+{
+  "stage": "triage",
+  "timestamp": "2026-07-18T00:10:03.305Z",
+  "basedOn": "migrate",
+  "baseBranch": "feature/pr2-triage-judgment",
+  "results": [
+    {
+      "clusterId": "SIMPLE_FORMAT",
+      "verdict": "OK",
+      "status": "migrated",
+      "coverage": "direct",
+      "tests": "direct",
+      "rationale": "Migrated and merged with direct characterization coverage (tests: direct); passing tests confirm behavior is preserved."
+    },
+    {
+      "clusterId": "MUTATION_CHAIN",
+      "verdict": "NEEDS_REVIEW",
+      "status": "pending_external",
+      "coverage": "none",
+      "tests": "skipped_unguarded",
+      "rationale": "Awaiting an external Codex handoff patch (pending_external); the cluster is not yet migrated and needs human follow-up."
+    },
+    {
+      "clusterId": "LOCALE_DEPENDENT",
+      "verdict": "NEEDS_REVIEW",
+      "status": "pending_external",
+      "coverage": "none",
+      "tests": "skipped_unguarded",
+      "rationale": "Awaiting an external Codex handoff patch (pending_external); the cluster is not yet migrated and needs human follow-up."
+    },
+    {
+      "clusterId": "TIMEZONE",
+      "verdict": "OK",
+      "status": "migrated",
+      "coverage": "direct",
+      "tests": "direct",
+      "rationale": "Migrated and merged with direct characterization coverage (tests: direct); passing tests confirm behavior is preserved."
+    },
+    {
+      "clusterId": "WRAPPED_ERROR_HANDLING",
+      "verdict": "NEEDS_REVIEW",
+      "status": "pending_external",
+      "coverage": "none",
+      "tests": "skipped_unguarded",
+      "rationale": "Awaiting an external Codex handoff patch (pending_external); the cluster is not yet migrated and needs human follow-up."
+    }
+  ],
+  "summary": {
+    "ok": 2,
+    "bug": 0,
+    "needsReview": 3,
+    "total": 5
+  }
+}
