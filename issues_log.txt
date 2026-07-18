@@ -92,3 +92,33 @@ issues_log
 - Problem: booting pipeline/report/server.js for verification failed with EADDRINUSE on 127.0.0.1:4173
 - Root cause: a sibling agent worktree was already serving its dashboard on the shared default port
 - Solution: verified this worktree's server via PORT=4199 (server still defaults to 4173 for the demo); confirmed GET 200 for dashboard.html and migrate.json, 404 for the absent triage-results.json
+
+[2026-07-17] dashboard verdict counts read wrong triage summary keys (schema reconciliation)
+- Problem: after integrating B (triage) and C (dashboard) onto master, the summary panel showed OK/BUG/Needs review as 0/0/0 even though triage-results.json reported 2 OK and 3 NEEDS_REVIEW
+- Root cause: Person C built model.js against a DOCUMENTED triage schema with uppercase summary keys (summary.OK/BUG/NEEDS_REVIEW), but Person B's REAL triage-results.json uses lowercase keys (summary.ok/bug/needsReview); verdictCounts short-circuited on the present summary object and returned zeros
+- Solution: fixed pipeline/report/model.js verdictCounts to read summary.ok/summary.bug/summary.needsReview (B's real schema) and updated the schema doc comment; results[]/verdict/rationale were already correct, so Panel 4 flagged rows (verdict in {BUG,NEEDS_REVIEW}) were unaffected. Verified in-browser: summary now reads 2 OK / 0 BUG / 3 Needs review
+
+[2026-07-17] dashboard summary trusted migrate.json.summary counters that can read 0
+- Problem: the migrated/failed/pending/skipped metrics trusted migrate.json.summary, which B documented can be dropped to 0 by the schema-frozen `git reset --hard` between clusters even when clusters really migrated
+- Root cause: migrate writes the final summary after a reset --hard cycle that can clobber the in-run counters; the summary is therefore not a reliable source of truth
+- Solution: added migrateStatusCounts() in pipeline/report/model.js that derives migrated/failed/pendingExternal/skippedUnguarded by tallying migrate.json.clusters[].status (snake_case status normalized to the camelCase summary keys), and pointed summaryMetrics at it; did NOT modify the frozen migrate code. Verified: summary shows 2 Migrated / 0 Failed / 3 Pending external / 0 Skipped
+
+[2026-07-17] integrated master had target-repo already migrated, breaking a fresh migrate run
+- Problem: `npm run migrate` on integrated master would fail because B's branch baked the migrated target-repo source (vendorExports.js -> date-fns-tz, lib/dates.js formatInvoiceStamp -> date-fns) into history; TIMEZONE.patch/git apply and the SIMPLE_FORMAT codemod cannot re-apply to already-migrated code, and DEMO_SCRIPT Beat 1 expects untouched Moment call sites
+- Root cause: migrate's mergeToBase commits the migration into the base branch, so once B's feature branch (which was its own base) carried the merges, master inherited migrated source rather than the pre-migration baseline the demo re-runs against
+- Solution: restored target-repo/lib/dates.js and target-repo/services/vendorExports.js to the origin/master (pre-migration) baseline, kept the date-fns-tz dependency, then ran the full pipeline; migrate cleanly re-applied SIMPLE_FORMAT + TIMEZONE (TIMEZONE really merged via its .patch) proving the pipeline works, after which I returned target-repo source to the pre-migration baseline and deleted the 5 temp migrate/* branches so master stays re-runnable with a clean tree. Kept B's committed migrate.json + migration-log.json as the mutually-consistent artifact pair (its logEntryIds all resolve, unlike a re-run whose ids overran the frozen log)
+
+[2026-07-17] date-fns-tz declared in target-repo but not installed or locked
+- Problem: target-repo/package.json declared date-fns-tz (needed by the migrated vendorExports.js) but node_modules/date-fns-tz was absent and package-lock.json had no entry, so the migrated TIMEZONE code / its tests could not resolve the module
+- Root cause: B added the dependency to package.json without running install to update the lockfile
+- Solution: ran npm install in target-repo (installed date-fns-tz@3.2.0, node_modules stays gitignored) and committed the resulting package-lock.json entry so package.json and the lockfile agree
+
+[2026-07-17] issues_log.txt merge conflict while integrating C onto master
+- Problem: merging feature/pr2-report-dashboard reported a content conflict in issues_log.txt
+- Root cause: B and C each appended new entries at the end of the file, producing overlapping hunks
+- Solution: resolved as a UNION — kept every entry from both sides (B's worktree/node_modules + migration-log reset notes and C's resilient-load + verify-port notes) with no deletions
+
+[2026-07-17] stale sibling dashboard server held port 4173 during integration verify
+- Problem: `npm run dashboard` failed with EADDRINUSE on 127.0.0.1:4173
+- Root cause: a leftover node process from a previous agent was still serving the retired pipeline/dashboard/server.js on the shared demo port
+- Solution: confirmed the process was the old dashboard server via its command line, stopped it, and served the consolidated pipeline/report/server.js on the canonical 4173; verified GET 200 for dashboard.html + all five artifact JSONs and that Panel 4 rendered real NEEDS_REVIEW rows (not the load-error banner)
