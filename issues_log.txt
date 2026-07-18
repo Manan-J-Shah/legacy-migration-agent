@@ -72,3 +72,13 @@ issues_log
 - Problem: the two task-resolution entries appeared without a blank line between them
 - Root cause: PowerShell here-string boundary handling consumed the intended leading separator during the second append
 - Solution: normalized the log to LF and inserted the separator explicitly while preserving all existing content
+
+[2026-07-17] evidence dashboard must render before triage-results.json exists
+- Problem: Person C's dashboard consumes triage-results.json, which Person B builds in a parallel worktree, so the file is absent when the dashboard loads
+- Root cause: a single Promise.all fetch of all artifacts rejects the whole render if any one file 404s, and placeholder rows would violate the no-fake-data rule
+- Solution: fetch each artifact independently in the data layer and carry a per-file {ok,error}; each panel renders an explicit "<file> could not load — <reason>" banner (verified: triage panel + verdict metrics show HTTP 404) while panels 1-3 populate from the present migrate/plan/manifest/migration-log JSON
+
+[2026-07-17] dashboard verify port 4173 already in use
+- Problem: booting pipeline/report/server.js for verification failed with EADDRINUSE on 127.0.0.1:4173
+- Root cause: a sibling agent worktree was already serving its dashboard on the shared default port
+- Solution: verified this worktree's server via PORT=4199 (server still defaults to 4173 for the demo); confirmed GET 200 for dashboard.html and migrate.json, 404 for the absent triage-results.json
