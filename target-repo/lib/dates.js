@@ -21,7 +21,7 @@ function formatForLocale(date, locale) {
 
 function formatInvoiceStamp(date) {
   // Accounting wants this exact pattern on PDF footers
-  return format(date, 'MM/dd/yyyy HH:mm');
+  return moment(date).format('MM/DD/YYYY HH:mm');
 }
 
 /**

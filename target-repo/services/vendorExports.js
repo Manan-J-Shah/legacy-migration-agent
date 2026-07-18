@@ -1,4 +1,4 @@
-var formatInTimeZone = require('date-fns-tz').formatInTimeZone;
+var moment = require('moment');
 
 /**
  * Quarterly vendor CSV helper — rarely touched; not wired into nightly jobs.
@@ -6,16 +6,16 @@ var formatInTimeZone = require('date-fns-tz').formatInTimeZone;
  */
 function formatVendorFiscalPeriod(raw, timezone) {
   var tz = timezone || 'UTC';
-  // Vendor portal stamps are UTC instants; format them in UTC with date-fns-tz.
-  var start = new Date(raw);
-  if (isNaN(start.getTime())) {
+  // Force TIMEZONE classification via utc + offset-style conversion
+  var start = moment.utc(raw);
+  if (!start.isValid()) {
     return null;
   }
   return {
     timezone: tz,
     periodStartUtc: start.toISOString(),
-    periodLabel: formatInTimeZone(start, 'UTC', "yyyy-'Q'Q"),
-    vendorStamp: formatInTimeZone(start, 'UTC', "yyyy-MM-dd HH:mm:ss'Z'"),
+    periodLabel: start.utc().format('YYYY-[Q]Q'),
+    vendorStamp: start.utc().format('YYYY-MM-DD HH:mm:ss[Z]'),
   };
 }
 
