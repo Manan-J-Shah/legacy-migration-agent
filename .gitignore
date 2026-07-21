@@ -3,3 +3,17 @@ node_modules/
 .DS_Store
 *.log
 pipeline/characterize/.jest-result.json
+
+# Secrets / local env (never commit)
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.key
+id_rsa
+id_rsa.pub
+credentials.json
+**/service-account*.json
+.npmrc
+
