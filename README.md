@@ -50,6 +50,7 @@ npm run migrate                                     # incremental migrate -> mig
 $env:MIGRATE_FORCE_FAIL='SIMPLE_FORMAT'; npm run migrate   # force-fail demo (prints rollback, base stays clean)
 Remove-Item Env:\MIGRATE_FORCE_FAIL                 # clear the force-fail flag afterwards
 npm run triage                                      # verdicts -> triage-results.json
+npm run report                                      # validate artifacts and print dashboard readiness
 npm run dashboard                                   # serve the evidence dashboard
 ```
 
@@ -67,7 +68,9 @@ Dashboard URL: `http://127.0.0.1:4173/pipeline/report/dashboard.html`
 | `pipeline/report/dashboard.*` | dashboard |
 
 Never introduce a second source of truth (e.g. do not write the retired
-`triage.json`). Do not re-characterize the awkward sites.
+`triage.json` or a generated `report.json`). `npm run report` only validates
+the canonical artifacts consumed by the dashboard. Do not re-characterize the
+awkward sites.
 
 ## Branches
 
